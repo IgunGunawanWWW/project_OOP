@@ -18,6 +18,7 @@ body {
     border-radius: 10px;
 }
 
+h1,
 h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -27,17 +28,23 @@ input {
     width: 100%;
     padding: 10px;
     margin: 8px 0;
+
     border: 1px solid #ccc;
     border-radius: 5px;
+
+    box-sizing: border-box;
 }
 
 button {
     width: 100%;
     padding: 10px;
+
     background: black;
     color: white;
+
     border: none;
     border-radius: 5px;
+
     cursor: pointer;
 }
 
@@ -51,7 +58,37 @@ p {
 }
 
 a {
-    cursor: pointer;
     color: black;
     font-weight: bold;
+    text-decoration: none;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.button-group a {
+    width: 100%;
+}
+
+/*  */
+
+.alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
 }
