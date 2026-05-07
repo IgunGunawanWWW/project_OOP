@@ -16,35 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `menu`
+-- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `menu`;
+DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `menu` (
+CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nama_kopi` varchar(100) NOT NULL,
-  `deskripsi` text DEFAULT NULL,
-  `harga` decimal(10,2) NOT NULL,
-  `stok` int(11) DEFAULT 0,
-  `gambar` varchar(255) DEFAULT NULL,
-  `id_kategori` int(11) DEFAULT NULL,
-  `tersedia` tinyint(1) DEFAULT 1,
+  `nama` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('admin','pelanggan') DEFAULT 'pelanggan',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  KEY `id_kategori` (`id_kategori`),
-  CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id`)
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `menu`
+-- Dumping data for table `users`
 --
 
-LOCK TABLES `menu` WRITE;
-/*!40000 ALTER TABLE `menu` DISABLE KEYS */;
-INSERT INTO `menu` VALUES (1,'Americano','Espresso dengan air panas',18000.00,50,NULL,1,1),(2,'Cappuccino','Espresso dengan susu dan foam',22000.00,50,NULL,1,1),(3,'V60','Manual brew dengan metode pour over',25000.00,30,NULL,2,1),(4,'Matcha Latte','Minuman matcha dengan susu',20000.00,40,NULL,3,1);
-/*!40000 ALTER TABLE `menu` ENABLE KEYS */;
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'Admin Kopi','admin@kopi.com','scrypt:32768:8:1$L4aK6SqlApBCbTgW$4213b838ffba4aedeef1ced49d64cdce01059fd4e2811943006633c036371190468a5a6abcccdf6228985c5e580cc918c549503505f3ee558e8f9dd5617193c4','admin','2026-05-06 16:20:36'),(2,'Budi Santoso','budi@gmail.com','scrypt:32768:8:1$nxZwt7QETUI1Kenv$7ffb69e92acafa609a01f785f7cdb51dfe18cf049d41faa0fb8e344249ef9c40ce7bc15804d661364b683f3a02a824a9c3d6ccd65f6e61185dbb79d17f8fc8ec','pelanggan','2026-05-06 16:20:36'),(3,'Siti Rahayu','siti@gmail.com','scrypt:32768:8:1$q9x7milCdl3g2e6m$1d92f335b65d3c36667c8cb026970f086963b673c2cc5a2cff1baba6b2128724a95dd8dd0ac649c2d001cd8c96c3e51ee622d6ef9f546bae6b1998fe1733c238','pelanggan','2026-05-06 16:20:36'),(4,'kelvin','kelvin@gmail.com','scrypt:32768:8:1$F0ELfBcoGXV6RUEE$66eb5e1a1bddf5e10e88c62e1499f9b536dfa9187a8390446a16299729f796e606287835f2334f16bb57b8f9455920666d79b8917d7e10dc3ecebaa7a3b6e6cc','pelanggan','2026-05-07 08:10:16');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-07  0:00:32
+-- Dump completed on 2026-05-07 16:01:02

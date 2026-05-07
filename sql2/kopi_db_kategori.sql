@@ -16,32 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `users`
+-- Table structure for table `kategori`
 --
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `kategori`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `users` (
+CREATE TABLE `kategori` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nama` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` enum('admin','pelanggan') DEFAULT 'pelanggan',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `nama_kategori` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `kategori`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin Kopi','admin@kopi.com','admin123','admin','2026-05-06 16:20:36'),(2,'Budi Santoso','budi@gmail.com','budi123','pelanggan','2026-05-06 16:20:36'),(3,'Siti Rahayu','siti@gmail.com','siti123','pelanggan','2026-05-06 16:20:36');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+LOCK TABLES `kategori` WRITE;
+/*!40000 ALTER TABLE `kategori` DISABLE KEYS */;
+INSERT INTO `kategori` VALUES (1,'Espresso'),(2,'Manual Brew'),(3,'Non-Coffee'),(4,'Espresso'),(5,'Manual Brew'),(6,'Non-Coffee');
+/*!40000 ALTER TABLE `kategori` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-07  0:00:32
+-- Dump completed on 2026-05-07 16:01:02
