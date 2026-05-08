@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Utama</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style_main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="main-body">
+      <!-- Navbar -->
+<nav>
+    <h1>Fabulous Coffee</h1> <ul> <li><a href="#coffee">Coffee</a></li>
+        <li><a href="#non-coffee">Non Coffee</a></li>
+        <li><a href="#snack">Snack</a></li>
+        <li><a href="#food">Food</a></li>
+    </ul>
+</nav>
+  
+
+  <!-- Hero -->
+<header class="hero">
+    <div class="hero-content">
+        <p>Premium Coffee Experience</p>
+        <h2>Fabulous Coffee</h2>
+        <p style="letter-spacing: 2px; font-size: 12px; opacity: 0.8;">BEYOND THE ORDINARY CUP</p>
+        </div>
+    <a href="#bestseller" class="btn">EXPLORE MENU</a>
+</header>
+<!-- BEST SELLER -->
+<section id="bestseller">
+  <div class="section-header">
+    <span>ESTABLISHED 2026</span><h2>Must Try Favorites</h2>
+  </div>
+  
+
+  <div class="slider-container">
+
+    <!-- Tombol kiri -->
+    <button class="arrow left" onclick="prevSlide()">
+      ❮
+    </button>
+
+    <!-- Slider -->
+    <div class="slider">
+  <div class="slide" onclick="openDetail('Caramel Latte', 'Rp 35.000', 'Espresso creamy dengan caramel premium.', 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=1200&auto=format&fit=crop')">
+    <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=1200&auto=format&fit=crop">
+    <div class="slide-content">
+      <h3>Caramel Latte</h3>
+      <p>Espresso creamy dengan caramel premium.</p>
+    </div>
+  </div>
+
+  <div class="slide" onclick="openDetail('Black Coffee', 'Rp 28.000', 'Kopi hitam dengan aroma strong.', 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop')">
+    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop">
+    <div class="slide-content">
+      <h3>Black Coffee</h3>
+      <p>Kopi hitam dengan aroma strong.</p>
+    </div>
+  </div>
+
+  <div class="slide" onclick="openDetail('Matcha Latte', 'Rp 32.000', 'Matcha premium creamy.', 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1200&auto=format&fit=crop')">
+    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1200&auto=format&fit=crop">
+    <div class="slide-content">
+      <h3>Matcha Latte</h3>
+      <p>Matcha premium creamy.</p>
+    </div>
+  </div>
+</div>
+
+    <!-- Tombol kanan -->
+    <button class="arrow right" onclick="nextSlide()">
+      ❯
+    </button>
+
+  </div>
+
+</section>
+<!-- PRODUCT DETAIL -->
+<section id="product-detail" class="product-detail">
+
+  <div class="detail-container">
+
+    <!-- Kiri -->
+    <div class="detail-text">
+
+      <p class="back-btn" onclick="closeDetail()">
+        ← GO BACK
+      </p>
+
+      <h1 id="detail-title">
+        Caramel Latte
+      </h1>
+
+      <h2 id="detail-price">
+        Rp 35.000
+      </h2>
+
+      <p id="detail-desc">
+        Espresso creamy dengan caramel premium.
+      </p>
+
+      <button class="buy-btn">
+        ADD TO CART
+      </button>
+
+    </div>
+
+    <!-- Kanan -->
+    <div class="detail-image">
+
+      <img id="detail-img" src="">
+
+    </div>
+
+  </div>
+
+</section>
+
+  <!-- Coffee -->
+  <section class="menu-section" id="coffee">
+    <h2 class="menu-category-title">Special Coffee</h2>
+    
+    <div class="scroll-container">
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/6347546/pexels-photo-6347546.jpeg" alt="Americano">
+            </div>
+            <div class="card-info">
+                <h3>Americano</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.8 <span>(512 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp40.000</span>
+                    <button class="add-btn" onclick="addToCart('Americano', 40000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg" alt="Cafe Latte">
+                
+            </div>
+            <div class="card-info">
+                <h3>Cafe Latte</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.7 <span>(420 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp45.000</span>
+                    <button class="add-btn" onclick="addToCart('Cafe Latte', 45000)">+</button>
+                </div>
+            </div>
+        </div>
+        
+    <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/6207297/pexels-photo-6207297.jpeg" alt="Affogato">
+            </div>
+            <div class="card-info">
+                <h3>Affogato</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.9 <span>(210 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp35.000</span>
+                    <button class="add-btn" onclick="addToCart('Affogato', 35000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/350478/pexels-photo-350478.jpeg" alt="Mochaccino">
+            </div>
+            <div class="card-info">
+                <h3>Mochaccino</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.7 <span>(345 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp48.000</span>
+                    <button class="add-btn" onclick="addToCart('Mochaccino', 48000)">+</button>
+                </div>
+            </div>
+        </div>
+
+    </div> </section>
+
+  <!-- Non Coffee -->
+  <section class="menu-section" id="non-coffee">
+    <h2 class="menu-category-title">Non Coffee</h2>
+    
+    <div class="scroll-container">
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/5946632/pexels-photo-5946632.jpeg" alt="Matcha Latte">
+            </div>
+            <div class="card-info">
+                <h3>Matcha Latte</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.9 <span>(310 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp45.000</span>
+                    <button class="add-btn" onclick="addToCart('Matcha Latte', 45000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/4109744/pexels-photo-4109744.jpeg" alt="Chocolate">
+            </div>
+            <div class="card-info">
+                <h3>Chocolate</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.8 <span>(280 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp40.000</span>
+                    <button class="add-btn" onclick="addToCart('Chocolate', 40000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/15805342/pexels-photo-15805342.jpeg" alt="Red Velvet">
+            </div>
+            <div class="card-info">
+                <h3>Red Velvet</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.7 <span>(150 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp45.000</span>
+                    <button class="add-btn" onclick="addToCart('Red Velvet', 45000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/8496464/pexels-photo-8496464.jpeg" alt="Taro Latte">
+            </div>
+            <div class="card-info">
+                <h3>Taro Latte</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.8 <span>(190 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp45.000</span>
+                    <button class="add-btn" onclick="addToCart('Taro Latte', 45000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/5846351/pexels-photo-5846351.jpeg" alt="Cookies & Cream">
+            </div>
+            <div class="card-info">
+                <h3>Cookies & Cream</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.9 <span>(415 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp48.000</span>
+                    <button class="add-btn" onclick="addToCart('Cookies & Cream', 48000)">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+  <!-- Snack -->
+  <section class="menu-section" id="snack">
+    <h2 class="menu-category-title">Tasty Snacks</h2>
+    
+    <div class="scroll-container">
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg" alt="French Fries">
+            </div>
+            <div class="card-info">
+                <h3>French Fries</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.7 <span>(215 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp25.000</span>
+                    <button class="add-btn" onclick="addToCart('French Fries', 25000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/11013745/pexels-photo-11013745.jpeg" alt="Cireng Glazed">
+            </div>
+            <div class="card-info">
+                <h3>Cireng Glazed</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.8 <span>(180 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp22.000</span>
+                    <button class="add-btn" onclick="addToCart('Cireng Glazed', 22000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/3892469/pexels-photo-3892469.jpeg" alt="Croissant">
+            </div>
+            <div class="card-info">
+                <h3>Butter Croissant</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.9 <span>(320 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp28.000</span>
+                    <button class="add-btn" onclick="addToCart('Butter Croissant', 28000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/15104443/pexels-photo-15104443.jpeg" alt="Nachos">
+            </div>
+            <div class="card-info">
+                <h3>Nachos Cheese</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.6 <span>(145 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp32.000</span>
+                    <button class="add-btn" onclick="addToCart('Nachos Cheese', 32000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/1191639/pexels-photo-1191639.jpeg" alt="Donut">
+            </div>
+            <div class="card-info">
+                <h3>Donut Glazed</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.8 <span>(290 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp18.000</span>
+                    <button class="add-btn" onclick="addToCart('Donut Glazed', 18000)">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+  <!-- Food -->
+  <section class="menu-section" id="food">
+    <h2 class="menu-category-title">Heavy Meals</h2>
+    
+    <div class="scroll-container">
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/19535313/pexels-photo-19535313.jpeg" alt="Nasi Goreng">
+            </div>
+            <div class="card-info">
+                <h3>Nasi Goreng Fabulous</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.9 <span>(520 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp45.000</span>
+                    <button class="add-btn" onclick="addToCart('Nasi Goreng Fabulous', 45000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/19025736/pexels-photo-19025736.jpeg" alt="Mie Ayam">
+            </div>
+            <div class="card-info">
+                <h3>Mie Ayam Spesial</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.7 <span>(310 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp38.000</span>
+                    <button class="add-btn" onclick="addToCart('Mie Ayam Spesial', 38000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/3616956/pexels-photo-3616956.jpeg" alt="Rice Bowl">
+            </div>
+            <div class="card-info">
+                <h3>Chicken Rice Bowl</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.8 <span>(415 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp42.000</span>
+                    <button class="add-btn" onclick="addToCart('Chicken Rice Bowl', 42000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/1639562/pexels-photo-1639562.jpeg" alt="Beef Burger">
+            </div>
+            <div class="card-info">
+                <h3>Classic Beef Burger</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.8 <span>(280 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp55.000</span>
+                    <button class="add-btn" onclick="addToCart('Classic Beef Burger', 55000)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coffee-card">
+            <div class="card-image">
+                <img src="https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg" alt="Pasta">
+            </div>
+            <div class="card-info">
+                <h3>Pasta Carbonara</h3>
+                <div class="rating">
+                    <i class="fas fa-star"></i> 4.7 <span>(195 Reviews)</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">Rp50.000</span>
+                    <button class="add-btn" onclick="addToCart('Pasta Carbonara', 50000)">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Cart -->
+ <div class="floating-cart" onclick="toggleCart()">
+    <i class="fas fa-shopping-cart"></i>
+    <span id="cart-count">0</span>
+</div>
+
+<div id="cart-page" class="cart-modal">
+    <div class="cart-content">
+        <span class="close-cart" onclick="toggleCart()">&times;</span>
+        
+        <div id="empty-cart" class="cart-status">
+            <i class="fas fa-shopping-basket" style="font-size: 80px; color: #ddd; margin-bottom: 20px;"></i>
+            <h2>Anda belum memesan.</h2>
+            <button class="btn" onclick="toggleCart()">Go Shopping</button>
+        </div>
+
+        <div id="filled-cart" class="cart-status" style="display: none;">
+            <h2>Your Order</h2>
+            <div class="cart-item-list">
+                <!-- Items will be added here dynamically -->
+            </div>
+            <div class="cart-summary">
+                <p>Sub total: <span id="sub-total">RP 0</span></p>
+                <p>Delivery Charge: <span>RP 10K</span></p>
+                <hr>
+                <h3>Grand total: <span id="grand-total">RP 0</span></h3>
+            </div>
+            <button class="buy-btn" style="width: 100%; margin-top: 20px;">Checkout Now</button>
+        </div>
+    </div>
+</div>
+<!-- End Cart -->
+  <!-- Footer -->
+ <footer>
+    <div class="footer-container">
+        <div class="footer-box">
+            <h3>Fabulous.</h3>
+            <p>Menyajikan pengalaman kopi terbaik dengan biji pilihan dari petani lokal. Setiap cangkir adalah cerita tentang kualitas dan dedikasi.</p>
+        </div>
+
+    <div class="footer-box">
+        <h3>Follow Our Journey</h3>
+        <ul class="social-links">
+            <li>
+                <a href="#"><i class="fab fa-instagram"></i> @FabulousCoffee</a>
+            </li>
+            <li>
+                <a href="#"><i class="fab fa-tiktok"></i> @FabulousCoffee</a>
+            </li>
+            <li>
+                <a href="https://wa.me/628123456789" target="_blank">
+                    <i class="fab fa-whatsapp"></i> +62 812-3456-789
+                </a>
+            </li>
+        </ul>
+    </div>
+
+        <div class="footer-box">
+            <h3>Visit Us</h3>
+            <p>Jl. Kopi Senja No. 123, Jakarta</p>
+            <p>Senin - Minggu: 08.00 - 22.00</p>
+            <p>Email: hello@fabulouscoffee.com</p>
+        </div>
+    </div>
+
+    <div class="footer-creators">
+        <p>Created by:</p>
+        <div class="creator-list">
+            <span><strong>VIO LEFRANS</strong> (32250095)</span>
+            <span><strong>IGUN GUNAWAN</strong> (32250094)</span>
+            <span><strong>KELVIN FILEMON</strong> (32250077)</span>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        &copy; 2026 FABULOUS COFFEE. ALL RIGHTS RESERVED.
+    </div>
+<!-- End Footer -->
+</footer>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

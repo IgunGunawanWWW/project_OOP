@@ -73,3 +73,8 @@ def register():
 def logout():
     session.clear()
     return redirect(url_for('auth.home'))
+
+# main.html
+@auth_bp.route('/main')
+def main():
+    return render_template('main.html')
