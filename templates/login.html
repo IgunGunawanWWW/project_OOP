@@ -3,85 +3,59 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Login - Kopi Shop</title>
-
+        <title>Login - Fabulous Coffee</title>
         <link
             rel="stylesheet"
-            href="{{ url_for('static', filename='css/style.css') }}"
+            href="{{ url_for('static', filename='CSS/style.css') }}"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Montserrat:wght@400;500;600&display=swap"
+            rel="stylesheet"
         />
     </head>
-
     <body>
-        <!-- BACKGROUND -->
-        <div>
-            <img
-                class="background-image"
-                src="{{ url_for('static', filename='images/menu/bg.jpg') }}"
-            />
-        </div>
+        <img
+            class="background-image"
+            src="{{ url_for('static', filename='images/menu/bg.jpg') }}"
+            alt="background"
+        />
+        <div class="bg-overlay"></div>
 
-        <div
-            style="
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.45);
-                z-index: -1;
-            "
-        ></div>
+        <div class="auth-wrapper">
+            <div class="auth-box">
+                <p class="brand-label">FABULOUS COFFEE</p>
+                <h1 class="brand-title">Welcome Back</h1>
+                <p class="brand-sub">Masuk ke akunmu</p>
 
-        <!-- NAVBAR -->
-        <div class="top-bar">
-            <img
-                src="{{ url_for('static', filename='images/menu/logo.png') }}"
-                alt="Logo"
-            />
-        </div>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %} {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %} {% endif %} {% endwith %}
 
-        <!-- CONTENT -->
-        <div class="main-content">
-            <div class="container">
-                <div class="form-box">
-                    <h1>Login</h1>
-                    <p style="margin-bottom: 20px">Masuk ke akun Kopi Shop</p>
-                    <!-- ALERT (TIDAK DIUBAH LOGIC) -->
-                    {% with messages =
-                    get_flashed_messages(with_categories=true) %} {% if messages
-                    %} {% for category, message in messages %}
-                    <div class="alert {{ category }}">{{ message }}</div>
-                    {% endfor %} {% endif %} {% endwith %}
-                    <!-- FORM (TETAP SAMA) -->
-                    <form method="POST">
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            required
-                        />
+                <form method="POST">
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        required
+                    />
+                    <button type="submit" class="auth-btn">Login</button>
+                </form>
 
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            required
-                        />
-
-                        <button type="submit">Login</button>
-                    </form>
-
-                    <p style="margin-top: 20px; font-size: 14px">
-                        Belum punya akun?
-                        <a
-                            href="/register"
-                            style="color: #fff; font-weight: 500"
-                        >
-                            Daftar
-                        </a>
-                    </p>
-                </div>
+                <p class="auth-link">
+                    Belum punya akun? <a href="/register">Daftar</a>
+                </p>
             </div>
         </div>
 
-        <!-- FOOTER -->
-        <div class="footer">© 2026 Kopi Shop</div>
+        <div class="auth-footer">
+            © 2026 Fabulous Coffee. All Rights Reserved.
+        </div>
     </body>
 </html>

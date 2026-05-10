@@ -3,94 +3,65 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Daftar - Kopi Shop</title>
-
+        <title>Daftar - Fabulous Coffee</title>
         <link
             rel="stylesheet"
-            href="{{ url_for('static', filename='css/style.css') }}"
+            href="{{ url_for('static', filename='CSS/style.css') }}"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Montserrat:wght@400;500;600&display=swap"
+            rel="stylesheet"
         />
     </head>
-
     <body>
-        <!-- BACKGROUND -->
-        <div>
-            <img
-                class="background-image"
-                src="{{ url_for('static', filename='images/menu/bg.jpg') }}"
-            />
-        </div>
+        <img
+            class="background-image"
+            src="{{ url_for('static', filename='images/menu/bg.jpg') }}"
+            alt="background"
+        />
+        <div class="bg-overlay"></div>
 
-        <div
-            style="
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.45);
-                z-index: -1;
-            "
-        ></div>
+        <div class="auth-wrapper">
+            <div class="auth-box">
+                <p class="brand-label">FABULOUS COFFEE</p>
+                <h1 class="brand-title">Buat Akun</h1>
+                <p class="brand-sub">Bergabung bersama kami</p>
 
-        <!-- NAVBAR -->
-        <div class="top-bar">
-            <img
-                src="{{ url_for('static', filename='images/menu/logo.png') }}"
-                alt="Logo"
-            />
-        </div>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %} {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %} {% endif %} {% endwith %}
 
-        <!-- CONTENT -->
-        <div class="main-content">
-            <div class="container">
-                <div class="form-box">
-                    <h1>Daftar</h1>
-                    <p>Buat akun Kopi Shop</p>
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <input
+                        type="text"
+                        name="nama"
+                        placeholder="Nama Lengkap"
+                        required
+                    />
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        required
+                    />
+                    <button type="submit" class="auth-btn">Daftar</button>
+                </form>
 
-                    <!-- ALERT -->
-                    {% with messages =
-                    get_flashed_messages(with_categories=true) %} {% if messages
-                    %} {% for category, message in messages %}
-                    <div class="alert {{ category }}">{{ message }}</div>
-                    {% endfor %} {% endif %} {% endwith %}
-
-                    <!-- FORM FIX (INI KUNCI UTAMA) -->
-                    <form method="POST" action="{{ url_for('auth.register') }}">
-                        <input
-                            type="text"
-                            name="nama"
-                            placeholder="Nama Lengkap"
-                            required
-                        />
-
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            required
-                        />
-
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            required
-                        />
-
-                        <button type="submit">Daftar</button>
-                    </form>
-
-                    <p style="margin-top: 20px; font-size: 14px">
-                        Sudah punya akun?
-                        <a
-                            href="{{ url_for('auth.login') }}"
-                            style="color: #fff; font-weight: 500"
-                        >
-                            Login
-                        </a>
-                    </p>
-                </div>
+                <p class="auth-link">
+                    Sudah punya akun? <a href="/login">Login</a>
+                </p>
             </div>
         </div>
 
-        <!-- FOOTER -->
-        <div class="footer">© 2026 Kopi Shop</div>
+        <div class="auth-footer">
+            © 2026 Fabulous Coffee. All Rights Reserved.
+        </div>
     </body>
 </html>
