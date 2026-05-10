@@ -1,20 +1,12 @@
 /* RESET */
-<<<<<<< HEAD
-*{
-=======
 * {
->>>>>>> 7af637a (final update)
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 /* BODY */
-<<<<<<< HEAD
-body{
-=======
 body {
->>>>>>> 7af637a (final update)
     font-family: 'Inter', sans-serif;
     background: transparent;
     min-height: 100vh;
@@ -67,11 +59,7 @@ body {
     }
 }
 /* CONTENT */
-<<<<<<< HEAD
-.main-content{
-=======
 .main-content {
->>>>>>> 7af637a (final update)
     flex: 1;
 
     display: flex;
@@ -84,11 +72,7 @@ body {
 }
 
 /* NAVBAR */
-<<<<<<< HEAD
-.top-bar{
-=======
 .top-bar {
->>>>>>> 7af637a (final update)
     width: 100%;
     height: 100px;
 
@@ -98,29 +82,17 @@ body {
     justify-content: center;
     align-items: center;
 
-<<<<<<< HEAD
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-=======
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
->>>>>>> 7af637a (final update)
 
     position: relative;
 }
 
-<<<<<<< HEAD
-.top-bar img{
-=======
 .top-bar img {
->>>>>>> 7af637a (final update)
     height: 50px;
 }
 
 /* CARD */
-<<<<<<< HEAD
-.container{
-=======
 .container {
->>>>>>> 7af637a (final update)
     width: 100%;
     max-width: 380px;
 }
@@ -135,11 +107,7 @@ body {
     padding: 35px;
     border-radius: 15px;
 
-<<<<<<< HEAD
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-=======
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
->>>>>>> 7af637a (final update)
 }
 
 @keyframes popUp {
@@ -155,23 +123,12 @@ body {
 
 /* TITLE */
 h1,
-<<<<<<< HEAD
-h2{
-=======
 h2 {
->>>>>>> 7af637a (final update)
     text-align: center;
     margin-bottom: 15px;
 
     color: #111;
 }
-<<<<<<< HEAD
-h1, p {
-    animation: fadeText 1s ease;
-}
-
-h1, h2 {
-=======
 h1,
 p {
     animation: fadeText 1s ease;
@@ -179,7 +136,6 @@ p {
 
 h1,
 h2 {
->>>>>>> 7af637a (final update)
     color: #ffffff;
 }
 
@@ -198,11 +154,7 @@ p {
 }
 
 /* TEXT */
-<<<<<<< HEAD
-p{
-=======
 p {
->>>>>>> 7af637a (final update)
     text-align: center;
     color: #ffffff;
 
@@ -218,11 +170,7 @@ p {
 }
 
 /* INPUT */
-<<<<<<< HEAD
-input{
-=======
 input {
->>>>>>> 7af637a (final update)
     width: 100%;
 
     padding: 12px;
@@ -261,11 +209,7 @@ button:hover {
 
     background: rgba(40, 40, 40, 0.9);
 
-<<<<<<< HEAD
-    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
-=======
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
->>>>>>> 7af637a (final update)
 }
 
 button:active {
@@ -273,25 +217,17 @@ button:active {
 }
 
 /* BUTTON GROUP */
-<<<<<<< HEAD
-.button-group{
-=======
 .button-group {
->>>>>>> 7af637a (final update)
     display: flex;
     gap: 10px;
     margin-top: 20px;
 }
 
-.button-group a{
+.button-group a {
     width: 100%;
 }
 
 /* LINK */
-<<<<<<< HEAD
-a{
-    text-decoration: none;
-=======
 a {
     text-decoration: none;
 }
@@ -303,34 +239,20 @@ a {
 
     border-radius: 5px;
     text-align: center;
->>>>>>> 7af637a (final update)
 }
 
-/* ALERT */
-.alert{
-    padding: 10px;
-    margin-bottom: 15px;
-
-    border-radius: 5px;
-    text-align: center;
-}
-
-.success{
+.success {
     background: #d4edda;
     color: #155724;
 }
 
-.error{
+.error {
     background: #f8d7da;
     color: #721c24;
 }
 
 /* FOOTER */
-<<<<<<< HEAD
-.footer{
-=======
 .footer {
->>>>>>> 7af637a (final update)
     width: 100%;
     height: 100px;
 
@@ -356,11 +278,7 @@ a {
 
     color: white;
 
-<<<<<<< HEAD
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-=======
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
->>>>>>> 7af637a (final update)
 }
 
 h1 {
@@ -370,11 +288,7 @@ h1 {
 }
 
 p {
-<<<<<<< HEAD
-    color: rgba(255,255,255,0.7);
-=======
     color: rgba(255, 255, 255, 0.7);
->>>>>>> 7af637a (final update)
 }
 
 input {
@@ -384,23 +298,14 @@ input {
 
     border-radius: 10px;
 
-<<<<<<< HEAD
-    border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.1);
-=======
     border: 1px solid rgba(255, 255, 255, 0.2);
     background: rgba(255, 255, 255, 0.1);
->>>>>>> 7af637a (final update)
 
     color: white;
 }
 
 input::placeholder {
-<<<<<<< HEAD
-    color: rgba(255,255,255,0.6);
-=======
     color: rgba(255, 255, 255, 0.6);
->>>>>>> 7af637a (final update)
 }
 
 button {
@@ -422,11 +327,7 @@ button {
 
 button:hover {
     transform: translateY(-2px);
-<<<<<<< HEAD
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-=======
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
->>>>>>> 7af637a (final update)
 }
 
 /* ALERT FIX */
@@ -446,20 +347,11 @@ button:hover {
 
 .success {
     background: rgba(0, 255, 0, 0.12);
-<<<<<<< HEAD
-    color: #7CFF7C;
-=======
     color: #7cff7c;
->>>>>>> 7af637a (final update)
     border: 1px solid rgba(0, 255, 0, 0.3);
 }
 
 @keyframes fadeIn {
-<<<<<<< HEAD
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-=======
     from {
         opacity: 0;
         transform: translateY(-5px);
@@ -469,4 +361,3 @@ button:hover {
         transform: translateY(0);
     }
 }
->>>>>>> 7af637a (final update)
