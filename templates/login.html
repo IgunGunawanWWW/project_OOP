@@ -1,5 +1,6 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
+<<<<<<< HEAD
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,3 +90,90 @@
 
 </body>
 </html>
+=======
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login - Kopi Shop</title>
+
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/style.css') }}"
+        />
+    </head>
+
+    <body>
+        <!-- BACKGROUND -->
+        <div>
+            <img
+                class="background-image"
+                src="{{ url_for('static', filename='images/menu/bg.jpg') }}"
+            />
+        </div>
+
+        <div
+            style="
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.45);
+                z-index: -1;
+            "
+        ></div>
+
+        <!-- NAVBAR -->
+        <div class="top-bar">
+            <img
+                src="{{ url_for('static', filename='images/menu/logo.png') }}"
+                alt="Logo"
+            />
+        </div>
+
+        <!-- CONTENT -->
+        <div class="main-content">
+            <div class="container">
+                <div class="form-box">
+                    <h1>Login</h1>
+                    <p style="margin-bottom: 20px">Masuk ke akun Kopi Shop</p>
+                    <!-- ALERT (TIDAK DIUBAH LOGIC) -->
+                    {% with messages =
+                    get_flashed_messages(with_categories=true) %} {% if messages
+                    %} {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                    {% endfor %} {% endif %} {% endwith %}
+                    <!-- FORM (TETAP SAMA) -->
+                    <form method="POST">
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            required
+                        />
+
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            required
+                        />
+
+                        <button type="submit">Login</button>
+                    </form>
+
+                    <p style="margin-top: 20px; font-size: 14px">
+                        Belum punya akun?
+                        <a
+                            href="/register"
+                            style="color: #fff; font-weight: 500"
+                        >
+                            Daftar
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">© 2026 Kopi Shop</div>
+    </body>
+</html>
+>>>>>>> 7af637a (final update)
