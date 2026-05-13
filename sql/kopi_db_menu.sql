@@ -16,34 +16,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `menu`
---
-
-DROP TABLE IF EXISTS `menu`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `menu` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nama_kopi` varchar(100) NOT NULL,
-  `deskripsi` text DEFAULT NULL,
-  `harga` decimal(10,2) NOT NULL,
-  `stok` int(11) DEFAULT 0,
-  `gambar` varchar(255) DEFAULT NULL,
-  `id_kategori` int(11) DEFAULT NULL,
-  `tersedia` tinyint(1) DEFAULT 1,
-  PRIMARY KEY (`id`),
-  KEY `id_kategori` (`id_kategori`),
-  CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `menu`
 --
 
 LOCK TABLES `menu` WRITE;
 /*!40000 ALTER TABLE `menu` DISABLE KEYS */;
-INSERT INTO `menu` VALUES (1,'Americano','Espresso dengan air panas',18000.00,50,NULL,1,1),(2,'Cappuccino','Espresso dengan susu dan foam',22000.00,50,NULL,1,1),(3,'V60','Manual brew dengan metode pour over',25000.00,30,NULL,2,1),(4,'Matcha Latte','Minuman matcha dengan susu',20000.00,40,NULL,3,1);
+INSERT INTO `menu` VALUES (1,'Vanilla Latte','Espresso dengan sirup vanilla dan susu creamy',28000.00,50,'images/menu/Vanilla_Latte_RMBG.png',1,1),(2,'Dalgona Coffee','Kopi whipped cream dengan foam dalgona yang khas',32000.00,50,'images/menu/Dalgona_Coffee_RMBG.png',1,1),(3,'Caramel Latte','Espresso dengan sirup caramel dan susu lembut',30000.00,30,'images/menu/Caramel_Latte_RMBG.png',2,1),(5,'Americano',NULL,40000.00,0,NULL,NULL,1),(6,'French Fries',NULL,25000.00,0,NULL,NULL,1),(7,'Affogato',NULL,35000.00,0,NULL,NULL,1),(8,'Cafe Latte',NULL,45000.00,0,NULL,NULL,1),(9,'Donut Glazed',NULL,18000.00,0,NULL,NULL,1),(10,'Matcha Latte',NULL,45000.00,0,NULL,NULL,1),(11,'Chocolate',NULL,40000.00,0,NULL,NULL,1),(12,'Hazelnut Latte',NULL,42000.00,0,NULL,NULL,1),(13,'Cireng Glazed',NULL,22000.00,0,NULL,NULL,1),(14,'Nasi Goreng Fabulous',NULL,45000.00,0,NULL,NULL,1),(15,'Red Velvet',NULL,45000.00,0,NULL,NULL,1),(16,'Mochaccino',NULL,48000.00,0,NULL,NULL,1);
 /*!40000 ALTER TABLE `menu` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-07 16:01:02
+-- Dump completed on 2026-05-13  9:49:22

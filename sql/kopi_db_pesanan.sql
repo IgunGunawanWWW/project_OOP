@@ -16,33 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `detail_pesanan`
+-- Dumping data for table `pesanan`
 --
 
-DROP TABLE IF EXISTS `detail_pesanan`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `detail_pesanan` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_pesanan` int(11) NOT NULL,
-  `id_menu` int(11) NOT NULL,
-  `jumlah` int(11) NOT NULL,
-  `harga_satuan` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_pesanan` (`id_pesanan`),
-  KEY `id_menu` (`id_menu`),
-  CONSTRAINT `detail_pesanan_ibfk_1` FOREIGN KEY (`id_pesanan`) REFERENCES `pesanan` (`id`),
-  CONSTRAINT `detail_pesanan_ibfk_2` FOREIGN KEY (`id_menu`) REFERENCES `menu` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `detail_pesanan`
---
-
-LOCK TABLES `detail_pesanan` WRITE;
-/*!40000 ALTER TABLE `detail_pesanan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `detail_pesanan` ENABLE KEYS */;
+LOCK TABLES `pesanan` WRITE;
+/*!40000 ALTER TABLE `pesanan` DISABLE KEYS */;
+INSERT INTO `pesanan` VALUES (2,4,233000.00,'diproses','2026-05-10 10:21:36'),(3,4,68000.00,'diproses','2026-05-10 14:21:50'),(4,4,36000.00,'diproses','2026-05-10 14:41:39'),(5,4,240000.00,'diproses','2026-05-10 14:56:47'),(6,4,245000.00,'diproses','2026-05-10 15:19:48'),(7,4,22000.00,'diproses','2026-05-10 15:21:47'),(8,4,68000.00,'diproses','2026-05-10 16:00:52'),(9,4,28000.00,'diproses','2026-05-10 16:06:04'),(10,4,165000.00,'diproses','2026-05-10 16:17:05'),(11,4,90000.00,'diproses','2026-05-12 16:03:46'),(12,4,253000.00,'diproses','2026-05-13 00:39:19'),(13,4,48000.00,'diproses','2026-05-13 00:44:48'),(14,4,28000.00,'diproses','2026-05-13 01:07:47'),(15,4,80000.00,'diproses','2026-05-13 02:18:19'),(16,4,30000.00,'pending','2026-05-13 02:44:08');
+/*!40000 ALTER TABLE `pesanan` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-07 16:01:01
+-- Dump completed on 2026-05-13  9:49:21

@@ -16,27 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `kategori`
+-- Dumping data for table `detail_pesanan`
 --
 
-DROP TABLE IF EXISTS `kategori`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `kategori` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nama_kategori` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `kategori`
---
-
-LOCK TABLES `kategori` WRITE;
-/*!40000 ALTER TABLE `kategori` DISABLE KEYS */;
-INSERT INTO `kategori` VALUES (1,'Espresso'),(2,'Manual Brew'),(3,'Non-Coffee'),(4,'Espresso'),(5,'Manual Brew'),(6,'Non-Coffee');
-/*!40000 ALTER TABLE `kategori` ENABLE KEYS */;
+LOCK TABLES `detail_pesanan` WRITE;
+/*!40000 ALTER TABLE `detail_pesanan` DISABLE KEYS */;
+INSERT INTO `detail_pesanan` VALUES (12,2,1,1,28000.00),(13,2,5,1,40000.00),(14,2,8,1,45000.00),(15,2,7,1,35000.00),(16,2,5,1,40000.00),(17,2,8,1,45000.00),(18,3,1,1,28000.00),(19,3,5,1,40000.00),(20,4,9,1,18000.00),(21,4,9,1,18000.00),(24,5,5,1,40000.00),(25,5,8,1,45000.00),(26,5,7,1,35000.00),(27,5,5,3,40000.00),(28,6,8,1,45000.00),(29,6,7,1,35000.00),(30,6,10,1,45000.00),(31,6,11,3,40000.00),(33,7,13,1,22000.00),(34,8,1,1,28000.00),(35,8,5,1,40000.00),(36,9,1,1,28000.00),(38,10,8,1,45000.00),(39,10,7,1,35000.00),(40,10,11,1,40000.00),(41,10,14,1,45000.00),(42,11,15,1,45000.00),(43,11,15,1,45000.00),(45,12,1,1,28000.00),(46,12,8,5,45000.00),(48,13,16,1,48000.00),(50,14,1,1,28000.00),(51,15,5,2,40000.00),(52,16,3,1,30000.00);
+/*!40000 ALTER TABLE `detail_pesanan` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -48,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-07 16:01:02
+-- Dump completed on 2026-05-13  9:49:21

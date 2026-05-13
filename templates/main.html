@@ -104,11 +104,21 @@
                         Espresso creamy dengan caramel premium.
                     </p>
                     <button class="buy-btn" onclick="addFromSlider()"">ADD TO CART</button>
-                </div>
-                <!-- Kanan -->
-                <div class="detail-image">
-                    <img id="detail-img" src="" />
-                </div>
+                    <div class="detail-tags">
+                        <span>☕ Best Seller</span>
+                        <span>🔥 Popular</span>
+                        <span>⭐ Staff Pick</span>
+                    </div>
+
+                    <p class="detail-note">
+                        Dipesan segar setiap hari. Bahan pilihan dari petani lokal terbaik.
+                    </p>
+                    </div>
+                    <!-- Kanan -->
+                    <div class="detail-image">
+                        <img id="detail-img" src="" />
+                        <p class="detail-brand-text">FABULOUS COFFEE</p>
+                    </div>
             </div>
         </section>
 
@@ -116,8 +126,8 @@
         <section class="menu-section" id="coffee">
             <h2 class="menu-category-title">Special Coffee</h2>
             <div class="scroll-container">
-                <div class="coffee-card" onclick="openCardDetail('Americano', 40000, '/static/images/menu/americano.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/americano.jpg" alt="Americano" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Americano', 40000, '/static/images/coffee/americano.jpg')">
+                    <div class="card-image"><img src="/static/images/coffee/americano.jpg" alt="Americano" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Americano</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.8 <span>(512 Reviews)</span></div>
@@ -128,8 +138,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Cafe Latte', 45000, '/static/images/menu/cafe_latte.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/cafe_latte.jpg" alt="Cafe Latte" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Cafe Latte', 45000, '/static/images/coffee/cafe_latte.jpg')">
+                    <div class="card-image"><img src="/static/images/coffee/cafe_latte.jpg" alt="Cafe Latte" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Cafe Latte</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.7 <span>(420 Reviews)</span></div>
@@ -140,8 +150,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Affogato', 35000, '/static/images/menu/affogato.png')">
-                    <div class="card-image"><img src="/static/images/menu/affogato.png" alt="Affogato" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Affogato', 35000, '/static/images/coffee/affogato.png')">
+                    <div class="card-image"><img src="/static/images/coffee/affogato.png" alt="Affogato" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Affogato</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.9 <span>(210 Reviews)</span></div>
@@ -152,8 +162,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Mochaccino', 48000, '/static/images/menu/mochaccino.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/mochaccino.jpg" alt="Mochaccino" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Mochaccino', 48000, '/static/images/coffee/mochaccino.jpg')">
+                    <div class="card-image"><img src="/static/images/coffee/mochaccino.jpg" alt="Mochaccino" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Mochaccino</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.7 <span>(345 Reviews)</span></div>
@@ -164,8 +174,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Hazelnut Latte', 42000, '/static/images/menu/Hazelnut_Latte.png')">
-                <div class="card-image"><img src="/static/images/menu/Hazelnut_Latte.png" alt="Hazelnut Latte" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Hazelnut Latte', 42000, '/static/images/coffee/Hazelnut_Latte.png')">
+                <div class="card-image"><img src="/static/images/coffee/Hazelnut_Latte.png" alt="Hazelnut Latte" loading="lazy"/></div>
                 <div class="card-info">
                     <h3>Hazelnut Latte</h3>
                     <div class="rating"><i class="fas fa-star"></i> 4.8 <span>(410 Reviews)</span></div>
@@ -182,8 +192,8 @@
         <section class="menu-section" id="non-coffee">
             <h2 class="menu-category-title">Non Coffee</h2>
             <div class="scroll-container">
-                <div class="coffee-card" onclick="openCardDetail('Matcha Latte', 45000, '/static/images/menu/matcha_latte.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/matcha_latte.jpg" alt="Matcha Latte" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Matcha Latte', 45000, '/static/images/non-coffee/matcha_latte.jpg')">
+                    <div class="card-image"><img src="/static/images/non-coffee/matcha_latte.jpg" alt="Matcha Latte" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Matcha Latte</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.9 <span>(310 Reviews)</span></div>
@@ -194,8 +204,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Chocolate', 40000, '/static/images/menu/chocolate.png')">
-                    <div class="card-image"><img src="/static/images/menu/chocolate.png" alt="Chocolate" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Chocolate', 40000, '/static/images/non-coffee/chocolate.png')">
+                    <div class="card-image"><img src="/static/images/non-coffee/chocolate.png" alt="Chocolate" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Chocolate</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.8 <span>(280 Reviews)</span></div>
@@ -206,8 +216,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Red Velvet', 45000, '/static/images/menu/red_velvet.jpeg')">
-                    <div class="card-image"><img src="/static/images/menu/red_velvet.jpeg" alt="Red Velvet" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Red Velvet', 45000, '/static/images/non-coffee/red_velvet.jpeg')">
+                    <div class="card-image"><img src="/static/images/non-coffee/red_velvet.jpeg" alt="Red Velvet" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Red Velvet</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.7 <span>(150 Reviews)</span></div>
@@ -218,8 +228,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Taro Latte', 45000, '/static/images/menu/taro_latte.png')">
-                    <div class="card-image"><img src="/static/images/menu/taro_latte.png" alt="Taro Latte" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Taro Latte', 45000, '/static/images/non-coffee/taro_latte.png')">
+                    <div class="card-image"><img src="/static/images/non-coffee/taro_latte.png" alt="Taro Latte" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Taro Latte</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.8 <span>(190 Reviews)</span></div>
@@ -230,8 +240,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Cookies & Cream', 48000, '/static/images/menu/cookies_cream.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/cookies_cream.jpg" alt="Cookies & Cream" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Cookies & Cream', 48000, '/static/images/non-coffee/cookies_cream.jpg')">
+                    <div class="card-image"><img src="/static/images/non-coffee/cookies_cream.jpg" alt="Cookies & Cream" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Cookies & Cream</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.9 <span>(415 Reviews)</span></div>
@@ -248,8 +258,8 @@
         <section class="menu-section" id="snack">
             <h2 class="menu-category-title">Tasty Snacks</h2>
             <div class="scroll-container">
-                <div class="coffee-card" onclick="openCardDetail('French Fries', 25000, '/static/images/menu/french_fries.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/french_fries.jpg" alt="French Fries" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('French Fries', 25000, '/static/images/snack/french_fries.jpg')">
+                    <div class="card-image"><img src="/static/images/snack/french_fries.jpg" alt="French Fries" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>French Fries</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.7 <span>(215 Reviews)</span></div>
@@ -260,8 +270,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Cireng Glazed', 22000, '/static/images/menu/cireng_glazed.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/cireng_glazed.jpg" alt="Cireng Glazed" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Cireng Glazed', 22000, '/static/images/snack/cireng_glazed.jpg')">
+                    <div class="card-image"><img src="/static/images/snack/cireng_glazed.jpg" alt="Cireng Glazed" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Cireng Glazed</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.8 <span>(180 Reviews)</span></div>
@@ -272,8 +282,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Butter Croissant', 28000, '/static/images/menu/butter_croissant.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/butter_croissant.jpg" alt="Butter Croissant" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Butter Croissant', 28000, '/static/images/snack/butter_croissant.jpg')">
+                    <div class="card-image"><img src="/static/images/snack/butter_croissant.jpg" alt="Butter Croissant" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Butter Croissant</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.9 <span>(320 Reviews)</span></div>
@@ -284,8 +294,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Nachos Cheese', 32000, '/static/images/menu/nachos_cheese.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/nachos_cheese.jpg" alt="Nachos Cheese" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Nachos Cheese', 32000, '/static/images/snack/nachos_cheese.jpg')">
+                    <div class="card-image"><img src="/static/images/snack/nachos_cheese.jpg" alt="Nachos Cheese" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Nachos Cheese</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.6 <span>(145 Reviews)</span></div>
@@ -296,8 +306,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Donut Glazed', 18000, '/static/images/menu/donut_glazed.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/donut_glazed.jpg" alt="Donut Glazed" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Donut Glazed', 18000, '/static/images/snack/donut_glazed.jpg')">
+                    <div class="card-image"><img src="/static/images/snack/donut_glazed.jpg" alt="Donut Glazed" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Donut Glazed</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.8 <span>(290 Reviews)</span></div>
@@ -314,8 +324,8 @@
         <section class="menu-section" id="food">
             <h2 class="menu-category-title">Heavy Meals</h2>
             <div class="scroll-container">
-                <div class="coffee-card" onclick="openCardDetail('Nasi Goreng Fabulous', 45000, '/static/images/menu/nasi_goreng.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/nasi_goreng.jpg" alt="Nasi Goreng" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Nasi Goreng Fabulous', 45000, '/static/images/food/nasi_goreng.jpg')">
+                    <div class="card-image"><img src="/static/images/food/nasi_goreng.jpg" alt="Nasi Goreng" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Nasi Goreng Fabulous</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.9 <span>(520 Reviews)</span></div>
@@ -326,8 +336,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Mie Ayam Spesial', 38000, '/static/images/menu/mie_ayam.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/mie_ayam.jpg" alt="Mie Ayam" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Mie Ayam Spesial', 38000, '/static/images/food/mie_ayam.jpg')">
+                    <div class="card-image"><img src="/static/images/food/mie_ayam.jpg" alt="Mie Ayam" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Mie Ayam Spesial</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.7 <span>(310 Reviews)</span></div>
@@ -338,8 +348,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Chicken Rice Bowl', 42000, '/static/images/menu/chicken_rice_bowl.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/chicken_rice_bowl.jpg" alt="Rice Bowl" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Chicken Rice Bowl', 42000, '/static/images/food/chicken_rice_bowl.jpg')">
+                    <div class="card-image"><img src="/static/images/food/chicken_rice_bowl.jpg" alt="Rice Bowl" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Chicken Rice Bowl</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.8 <span>(415 Reviews)</span></div>
@@ -350,8 +360,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Classic Beef Burger', 55000, '/static/images/menu/beef_burger.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/beef_burger.jpg" alt="Beef Burger" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Classic Beef Burger', 55000, '/static/images/food/beef_burger.jpg')">
+                    <div class="card-image"><img src="/static/images/food/beef_burger.jpg" alt="Beef Burger" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Classic Beef Burger</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.8 <span>(280 Reviews)</span></div>
@@ -362,8 +372,8 @@
                     </div>
                 </div>
 
-                <div class="coffee-card" onclick="openCardDetail('Pasta Carbonara', 50000, '/static/images/menu/pasta_carbonara.jpg')">
-                    <div class="card-image"><img src="/static/images/menu/pasta_carbonara.jpg" alt="Pasta" loading="lazy"/></div>
+                <div class="coffee-card" onclick="openCardDetail('Pasta Carbonara', 50000, '/static/images/food/pasta_carbonara.jpg')">
+                    <div class="card-image"><img src="/static/images/food/pasta_carbonara.jpg" alt="Pasta" loading="lazy"/></div>
                     <div class="card-info">
                         <h3>Pasta Carbonara</h3>
                         <div class="rating"><i class="fas fa-star"></i> 4.7 <span>(195 Reviews)</span></div>

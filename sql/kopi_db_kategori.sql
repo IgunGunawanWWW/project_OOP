@@ -16,31 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `pesanan`
+-- Dumping data for table `kategori`
 --
 
-DROP TABLE IF EXISTS `pesanan`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `pesanan` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_user` int(11) NOT NULL,
-  `total_harga` decimal(10,2) NOT NULL,
-  `status` enum('pending','diproses','selesai','dibatalkan') DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`),
-  CONSTRAINT `pesanan_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `pesanan`
---
-
-LOCK TABLES `pesanan` WRITE;
-/*!40000 ALTER TABLE `pesanan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pesanan` ENABLE KEYS */;
+LOCK TABLES `kategori` WRITE;
+/*!40000 ALTER TABLE `kategori` DISABLE KEYS */;
+INSERT INTO `kategori` VALUES (1,'Espresso'),(2,'Manual Brew'),(3,'Non-Coffee'),(4,'Espresso'),(5,'Manual Brew'),(6,'Non-Coffee');
+/*!40000 ALTER TABLE `kategori` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-07 16:01:01
+-- Dump completed on 2026-05-13  9:49:21
