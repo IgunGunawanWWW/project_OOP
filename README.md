@@ -69,7 +69,7 @@ Pastikan **Apache** dan **MySQL** sudah berjalan di XAMPP.
 Buka MySQL Workbench atau phpMyAdmin, lalu jalankan file:
 
 ```
-sql2/setup.sql
+sql/setup.sql
 ```
 
 Atau jalankan manual:
@@ -121,7 +121,7 @@ project_OOP/
 │   └── database.py           # Koneksi database
 ├── routes/
 │   └── auth.py               # Semua route aplikasi
-├── sql2/
+├── sql/
 │   ├── setup.sql             # Setup lengkap (jalankan ini)
 │   ├── kopi_db_users.sql
 │   ├── kopi_db_kategori.sql
@@ -181,8 +181,6 @@ users ──< pesanan ──< detail_pesanan >── menu >── kategori
 
 ## ⚠️ Catatan Penting
 
-- File `.env` **tidak ikut di-push** ke GitHub — buat ulang di setiap komputer
-- Database **tidak ikut di-push** — jalankan `sql2/setup.sql` di setiap komputer baru
 - Password tersimpan dalam bentuk **hash** — tidak bisa dibaca langsung di database
 - Pastikan XAMPP berjalan sebelum menjalankan `python main.py`
 
