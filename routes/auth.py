@@ -1,17 +1,41 @@
 from flask import Blueprint
 from flask import redirect, url_for
 from flask import render_template, request, session, flash
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask import jsonify
-from models.database import get_db_connection
+from models.user import User
+from models.menu import Menu
+from models.pesanan import Pesanan
 
 auth_bp = Blueprint('auth', __name__)
+
+
+def _normalize_gambar(gambar):
+    """Simpan path gambar relatif (tanpa prefix /static/) agar konsisten dengan
+    data lama di tabel menu (mis. 'images/menu/...')."""
+    if not gambar:
+        return None
+    g = str(gambar).strip()
+    for prefix in ('/static/', 'static/'):
+        if g.startswith(prefix):
+            g = g[len(prefix):]
+            break
+    return g or None
+
+
+def _pesan_stok_kurang(menu, jumlah):
+    """Return pesan error jika stok menu tidak mencukupi, atau None jika cukup."""
+    stok = menu.get('stok') or 0
+    if stok <= 0:
+        return f"Stok {menu['nama_kopi']} sedang habis."
+    if jumlah > stok:
+        return f"Stok {menu['nama_kopi']} tinggal {stok}."
+    return None
 
 
 # HOME
 @auth_bp.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('home.html')
 
 
 # LOGIN
@@ -20,21 +44,21 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-        user = cursor.fetchone()
-        cursor.close()
-        conn.close()
-        if user and check_password_hash(user['password'], password):
-            session['user_id'] = user['id']
-            session['user_name'] = user['nama']
-            session['role'] = user['role']
-            flash('Login berhasil!', 'success')
-            return redirect(url_for('auth.main'))
+
+        with User() as model:
+            user = model.find_by_email(email)
+            if user and model.verify_password(user, password):
+                session['user_id'] = user['id']
+                session['user_name'] = user['nama']
+                session['role'] = user['role']
+                flash('Login berhasil!', 'success')
+                if user['role'] == 'admin':
+                    return redirect(url_for('admin.dashboard'))
+                return redirect(url_for('auth.menu'))
+
         flash('Email atau password salah!', 'error')
-        return redirect(url_for('auth.home'))
-    return render_template('login.html')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/login.html')
 
 
 # REGISTER
@@ -44,28 +68,16 @@ def register():
         nama = request.form.get('nama')
         email = request.form.get('email')
         password = request.form.get('password')
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
 
-        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-        user = cursor.fetchone()
-        if user:
-            flash('Email sudah digunakan!', 'error')
-            cursor.close()
-            conn.close()
-            return redirect(url_for('auth.register'))
+        with User() as model:
+            if model.find_by_email(email):
+                flash('Email sudah digunakan!', 'error')
+                return redirect(url_for('auth.register'))
+            model.create(nama, email, password)
 
-        hashed = generate_password_hash(password)
-        cursor.execute(
-            "INSERT INTO users (nama, email, password) VALUES (%s, %s, %s)",
-            (nama, email, hashed)
-        )
-        conn.commit()
-        cursor.close()
-        conn.close()
         flash('Akun berhasil dibuat!', 'success')
         return redirect(url_for('auth.login'))
-    return render_template('register.html')
+    return render_template('auth/register.html')
 
 
 # LOGOUT
@@ -74,20 +86,19 @@ def logout():
     session.clear()
     return redirect(url_for('auth.home'))
 
-# main.html
-@auth_bp.route('/main')
-def main():
+
+# HALAMAN MENU / TOKO
+@auth_bp.route('/menu')
+def menu():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM menu WHERE tersedia = 1 AND gambar IS NOT NULL AND gambar != ''")
-    menu = cursor.fetchall()
-    cursor.close()
-    conn.close()
+    with Menu() as model:
+        daftar_menu = model.untuk_halaman()
 
-    return render_template('main.html', menu=menu)
+    return render_template('menu.html', menu=daftar_menu)
+
+
 @auth_bp.route('/cart/add', methods=['POST'])
 def cart_add():
     if 'user_id' not in session:
@@ -97,50 +108,20 @@ def cart_add():
     menu_id = data.get('menu_id')
     jumlah = data.get('jumlah', 1)
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    with Menu() as menu_model, Pesanan() as pesanan_model:
+        if pesanan_model.ada_pesanan_diproses(session['user_id']):
+            return jsonify({'status': 'busy',
+                            'message': 'Pesananmu sedang diproses. Tunggu sampai selesai untuk memesan lagi.'})
 
-    # Ambil harga menu
-    cursor.execute("SELECT harga FROM menu WHERE id = %s", (menu_id,))
-    menu = cursor.fetchone()
-    if not menu:
-        return jsonify({'status': 'error', 'message': 'Menu tidak ditemukan'})
+        menu = menu_model.find(menu_id)
+        if not menu:
+            return jsonify({'status': 'error', 'message': 'Menu tidak ditemukan'})
 
-    harga = menu['harga']
+        kurang = _pesan_stok_kurang(menu, jumlah)
+        if kurang:
+            return jsonify({'status': 'habis', 'message': kurang})
 
-    # Cek apakah ada pesanan pending milik user
-    cursor.execute(
-        "SELECT id FROM pesanan WHERE id_user = %s AND status = 'pending'",
-        (session['user_id'],)
-    )
-    pesanan = cursor.fetchone()
-
-    if pesanan:
-        pesanan_id = pesanan['id']
-    else:
-        # Buat pesanan baru
-        cursor.execute(
-            "INSERT INTO pesanan (id_user, total_harga, status) VALUES (%s, %s, 'pending')",
-            (session['user_id'], 0)
-        )
-        conn.commit()
-        pesanan_id = cursor.lastrowid
-
-    # Tambah ke detail_pesanan
-    cursor.execute(
-        "INSERT INTO detail_pesanan (id_pesanan, id_menu, jumlah, harga_satuan) VALUES (%s, %s, %s, %s)",
-        (pesanan_id, menu_id, jumlah, harga)
-    )
-
-    # Update total_harga di pesanan
-    cursor.execute(
-        "UPDATE pesanan SET total_harga = total_harga + %s WHERE id = %s",
-        (harga * jumlah, pesanan_id)
-    )
-
-    conn.commit()
-    cursor.close()
-    conn.close()
+        pesanan_model.tambah_item(session['user_id'], menu_id, jumlah, menu['harga'])
 
     return jsonify({'status': 'ok'})
 
@@ -150,91 +131,119 @@ def cart():
     if 'user_id' not in session:
         return jsonify({'status': 'error', 'message': 'Belum login'})
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    with Pesanan() as model:
+        order = model.order_terkini(session['user_id'])
 
-    cursor.execute(
-        "SELECT * FROM pesanan WHERE id_user = %s AND status = 'pending'",
-        (session['user_id'],)
-    )
-    pesanan = cursor.fetchone()
+        if not order:
+            return jsonify({'status': 'ok', 'mode': 'empty', 'items': [], 'total': 0})
 
-    if not pesanan:
-        return jsonify({'status': 'ok', 'items': [], 'total': 0})
+        status = order['status']
 
-    cursor.execute("""
-        SELECT m.nama_kopi, dp.jumlah, dp.harga_satuan,
-               (dp.jumlah * dp.harga_satuan) AS subtotal
-        FROM detail_pesanan dp
-        JOIN menu m ON dp.id_menu = m.id
-        WHERE dp.id_pesanan = %s
-    """, (pesanan['id'],))
+        # pending = keranjang yang sedang dibangun, diproses = pesanan aktif
+        if status in ('pending', 'diproses'):
+            items = [
+                {
+                    'id_menu': it['id_menu'],
+                    'nama_kopi': it['nama_kopi'],
+                    'gambar': it.get('gambar'),
+                    'kategori': it.get('kategori'),
+                    'jumlah': int(it['jumlah']),
+                    'harga_satuan': float(it['harga_satuan']),
+                    'subtotal': float(it['subtotal']),
+                }
+                for it in model.items(order['id'])
+            ]
+            if status == 'diproses':
+                mode = 'diproses'
+                # tandai pesanan ini sedang dipantau user
+                session['active_order'] = order['id']
+            else:
+                mode = 'cart' if items else 'empty'
+            return jsonify({
+                'status': 'ok',
+                'mode': mode,
+                'order_id': order['id'],
+                'items': items,
+                'total': float(order['total_harga']),
+            })
 
-    items = cursor.fetchall()
-    cursor.close()
-    conn.close()
+        # selesai / dibatalkan -> hanya tampilkan notifikasi sekali, yaitu untuk
+        # pesanan yang tadi dipantau user. Pesanan lama yang sudah "ditutup"
+        # tidak lagi muncul, jadi cart kembali kosong.
+        if session.get('active_order') == order['id']:
+            return jsonify({
+                'status': 'ok',
+                'mode': status,
+                'order_id': order['id'],
+                'items': [],
+                'total': 0,
+            })
+        return jsonify({'status': 'ok', 'mode': 'empty', 'items': [], 'total': 0})
 
-    return jsonify({
-        'status': 'ok',
-        'items': items,
-        'total': float(pesanan['total_harga'])
-    })
+
+@auth_bp.route('/cart/cancel', methods=['POST'])
+def cart_cancel():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Belum login'})
+
+    with Pesanan() as model, Menu() as menu_model:
+        order = model.order_terkini(session['user_id'])
+        berhasil = model.batalkan_diproses(session['user_id'])
+        if berhasil and order:
+            # kembalikan stok karena pesanan batal
+            for d in model.detail_untuk_stok(order['id']):
+                menu_model.tambah_stok(d['id_menu'], d['jumlah'])
+
+    if not berhasil:
+        return jsonify({'status': 'error', 'message': 'Tidak ada pesanan yang bisa dibatalkan'})
+
+    # tampilkan konfirmasi "dibatalkan" sekali untuk pesanan ini
+    session['active_order'] = order['id']
+    return jsonify({'status': 'ok'})
+
+
+@auth_bp.route('/cart/ack', methods=['POST'])
+def cart_ack():
+    """User menutup notifikasi pesanan selesai/dibatalkan ("Pesan Lagi"),
+    sehingga cart kembali kosong dan siap untuk pesanan berikutnya."""
+    session.pop('active_order', None)
+    return jsonify({'status': 'ok'})
+
 
 @auth_bp.route('/cart/add-by-name', methods=['POST'])
 def cart_add_by_name():
     if 'user_id' not in session:
         return jsonify({'status': 'error', 'message': 'Belum login'})
+
     data = request.get_json()
     nama = data.get('nama')
     harga = data.get('harga')
-    jumlah = data.get('jumlah', 1)  # Sudah ada, pastikan terbaca
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    jumlah = data.get('jumlah', 1)
+    gambar = _normalize_gambar(data.get('gambar'))
 
-    # Cari menu di database, kalau belum ada otomatis ditambahkan
-    cursor.execute("SELECT id FROM menu WHERE nama_kopi = %s", (nama,))
-    menu = cursor.fetchone()
+    with Menu() as menu_model, Pesanan() as pesanan_model:
+        if pesanan_model.ada_pesanan_diproses(session['user_id']):
+            return jsonify({'status': 'busy',
+                            'message': 'Pesananmu sedang diproses. Tunggu sampai selesai untuk memesan lagi.'})
 
-    if not menu:
-        cursor.execute(
-            "INSERT INTO menu (nama_kopi, harga, tersedia) VALUES (%s, %s, 1)",
-            (nama, harga)
-        )
-        conn.commit()
-        menu_id = cursor.lastrowid
-    else:
-        menu_id = menu['id']
+        # Cari menu di database, kalau belum ada otomatis ditambahkan (beri stok awal)
+        menu = menu_model.find_by_nama(nama)
+        if not menu:
+            menu_id = menu_model.create(nama, harga, stok=50, gambar=gambar)
+            menu = menu_model.find(menu_id)
+        elif gambar and not menu.get('gambar'):
+            # Lengkapi gambar untuk menu lama yang belum punya, supaya muncul di cart
+            menu_model.set_gambar(menu['id'], gambar)
+            menu['gambar'] = gambar
 
-    # Cek pesanan pending milik user
-    cursor.execute(
-        "SELECT id FROM pesanan WHERE id_user = %s AND status = 'pending'",
-        (session['user_id'],)
-    )
-    pesanan = cursor.fetchone()
+        kurang = _pesan_stok_kurang(menu, jumlah)
+        if kurang:
+            return jsonify({'status': 'habis', 'message': kurang})
 
-    if pesanan:
-        pesanan_id = pesanan['id']
-    else:
-        cursor.execute(
-            "INSERT INTO pesanan (id_user, total_harga, status) VALUES (%s, %s, 'pending')",
-            (session['user_id'], 0)
-        )
-        conn.commit()
-        pesanan_id = cursor.lastrowid
-
-    cursor.execute(
-        "INSERT INTO detail_pesanan (id_pesanan, id_menu, jumlah, harga_satuan) VALUES (%s, %s, %s, %s)",
-        (pesanan_id, menu_id, jumlah, harga)
-    )
-    cursor.execute(
-        "UPDATE pesanan SET total_harga = total_harga + %s WHERE id = %s",
-        (harga * jumlah, pesanan_id)
-    )
-    conn.commit()
-    cursor.close()
-    conn.close()
+        pesanan_model.tambah_item(session['user_id'], menu['id'], jumlah, harga)
 
     return jsonify({'status': 'ok'})
+
 
 @auth_bp.route('/cart/remove', methods=['POST'])
 def cart_remove():
@@ -244,66 +253,70 @@ def cart_remove():
     data = request.get_json()
     nama = data.get('nama')
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    with Menu() as menu_model, Pesanan() as pesanan_model:
+        keranjang = pesanan_model.keranjang_aktif(session['user_id'])
+        if not keranjang:
+            return jsonify({'status': 'error', 'message': 'Tidak ada pesanan'})
 
-    # Cari pesanan pending milik user
-    cursor.execute(
-        "SELECT id FROM pesanan WHERE id_user = %s AND status = 'pending'",
-        (session['user_id'],)
-    )
-    pesanan = cursor.fetchone()
-    if not pesanan:
-        return jsonify({'status': 'error', 'message': 'Tidak ada pesanan'})
+        menu = menu_model.find_by_nama(nama)
+        if not menu:
+            return jsonify({'status': 'error', 'message': 'Menu tidak ditemukan'})
 
-    # Cari menu
-    cursor.execute("SELECT id FROM menu WHERE nama_kopi = %s", (nama,))
-    menu = cursor.fetchone()
-    if not menu:
-        return jsonify({'status': 'error', 'message': 'Menu tidak ditemukan'})
-
-    # Ambil data item sebelum dihapus untuk update total
-    cursor.execute(
-        "SELECT jumlah, harga_satuan FROM detail_pesanan WHERE id_pesanan = %s AND id_menu = %s LIMIT 1",
-        (pesanan['id'], menu['id'])
-    )
-    item = cursor.fetchone()
-    if not item:
-        return jsonify({'status': 'error', 'message': 'Item tidak ada di keranjang'})
-
-    subtotal = item['jumlah'] * item['harga_satuan']
-
-    # Hapus item
-    cursor.execute(
-        "DELETE FROM detail_pesanan WHERE id_pesanan = %s AND id_menu = %s LIMIT 1",
-        (pesanan['id'], menu['id'])
-    )
-
-    # Update total
-    cursor.execute(
-        "UPDATE pesanan SET total_harga = total_harga - %s WHERE id = %s",
-        (subtotal, pesanan['id'])
-    )
-
-    conn.commit()
-    cursor.close()
-    conn.close()
+        if not pesanan_model.hapus_item(keranjang['id'], menu['id']):
+            return jsonify({'status': 'error', 'message': 'Item tidak ada di keranjang'})
 
     return jsonify({'status': 'ok'})
+
+
+@auth_bp.route('/cart/update-qty', methods=['POST'])
+def cart_update_qty():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Belum login'})
+
+    data = request.get_json()
+    nama = data.get('nama')
+    jumlah = int(data.get('jumlah', 1))
+
+    if jumlah < 1:
+        return jsonify({'status': 'error', 'message': 'Kuantitas minimal 1'})
+
+    with Menu() as menu_model, Pesanan() as pesanan_model:
+        if pesanan_model.ada_pesanan_diproses(session['user_id']):
+            return jsonify({'status': 'busy',
+                            'message': 'Pesananmu sedang diproses. Tunggu sampai selesai untuk mengubah pesanan.'})
+
+        keranjang = pesanan_model.keranjang_aktif(session['user_id'])
+        if not keranjang:
+            return jsonify({'status': 'error', 'message': 'Tidak ada pesanan'})
+
+        menu = menu_model.find_by_nama(nama)
+        if not menu:
+            return jsonify({'status': 'error', 'message': 'Menu tidak ditemukan'})
+
+        kurang = _pesan_stok_kurang(menu, jumlah)
+        if kurang:
+            return jsonify({'status': 'habis', 'message': kurang})
+
+        pesanan_model.set_jumlah(keranjang['id'], menu['id'], jumlah)
+
+    return jsonify({'status': 'ok'})
+
 
 @auth_bp.route('/cart/checkout', methods=['POST'])
 def cart_checkout():
     if 'user_id' not in session:
         return jsonify({'status': 'error'})
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute(
-        "UPDATE pesanan SET status = 'diproses' WHERE id_user = %s AND status = 'pending'",
-        (session['user_id'],)
-    )
-    conn.commit()
-    cursor.close()
-    conn.close()
+    with Pesanan() as model, Menu() as menu_model:
+        keranjang = model.keranjang_aktif(session['user_id'])
+        if keranjang:
+            # potong stok tiap item yang dibeli
+            for d in model.detail_untuk_stok(keranjang['id']):
+                menu_model.kurangi_stok(d['id_menu'], d['jumlah'])
+        model.checkout(session['user_id'])
+
+    # pantau pesanan ini supaya notifikasi selesai/dibatalkan muncul nanti
+    if keranjang:
+        session['active_order'] = keranjang['id']
 
     return jsonify({'status': 'ok'})

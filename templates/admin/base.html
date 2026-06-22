@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin{% endblock %} - Fabulous Coffee</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/menu/logo.webp') }}" type="image/webp">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+        // terapkan dark mode tersimpan sebelum halaman digambar (anti-kedip)
+        if (localStorage.getItem('darkMode') === 'on') document.documentElement.classList.add('dark');
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased dark:bg-gray-900 dark:text-gray-200 transition-colors duration-300">
+<div class="flex h-screen w-full">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-black text-white flex flex-col">
+        <div class="p-6 border-b border-gray-800">
+            <img src="{{ url_for('static', filename='images/menu/logo.webp') }}"
+                 alt="Logo Fabulous Coffee" class="w-12 h-12 rounded-lg object-cover mb-3">
+            <h1 class="text-2xl font-bold tracking-wider">Fabulous Coffee</h1>
+            <p class="text-xs text-gray-400 mt-1">Admin Panel</p>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="{{ url_for('admin.dashboard') }}"
+               class="block px-4 py-2 text-sm rounded text-gray-300 hover:bg-gray-800">Dashboard</a>
+            <a href="{{ url_for('admin.dashboard') }}#transactions"
+               class="block px-4 py-2 text-sm rounded text-gray-300 hover:bg-gray-800">Transaksi</a>
+            {% set nav_items = [
+                ('admin.users', 'Manajemen User'),
+                ('admin.menu', 'Data Menu'),
+                ('admin.kategori', 'Data Kategori'),
+                ('admin.laporan', 'Laporan'),
+            ] %}
+            {% for endpoint, label in nav_items %}
+            <a href="{{ url_for(endpoint) }}"
+               class="block px-4 py-2 text-sm rounded {{ 'bg-gray-800 text-white font-semibold border-l-4 border-white' if request.endpoint == endpoint else 'text-gray-300 hover:bg-gray-800' }}">{{ label }}</a>
+            {% endfor %}
+        </nav>
+        <div class="p-4 border-t border-gray-800 space-y-1.5">
+            <a href="{{ url_for('auth.menu') }}"
+               class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-800 hover:text-[#e8c14f] transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Ke Toko
+            </a>
+            <a href="{{ url_for('auth.logout') }}"
+               class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-400 rounded-lg hover:bg-red-500/10 hover:text-red-300 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Logout
+            </a>
+            <button onclick="toggleDarkMode()"
+                    class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-800 transition">
+                <span class="flex items-center gap-3">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    <span id="darkModeText">Dark Mode: OFF</span>
+                </span>
+                <span id="darkModeToggle" class="relative inline-block w-10 h-5 rounded-full transition-colors duration-300" style="background:#4b5563;">
+                    <span id="darkModeKnob" class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-300"></span>
+                </span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <header class="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700 px-8 py-4 flex justify-between items-center transition-colors duration-300">
+            <div class="font-bold text-lg">{% block header %}{% endblock %}</div>
+            <div class="text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">{{ session['user_name'] }}</div>
+        </header>
+        <div class="p-8 overflow-y-auto flex-1">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                <div class="mb-4 px-4 py-3 rounded text-sm {{ 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' if category == 'success' else 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' }}">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
+<script>
+    function applyDarkModeUI(isDark) {
+        document.getElementById('darkModeText').innerText = isDark ? 'Dark Mode: ON' : 'Dark Mode: OFF';
+        const toggle = document.getElementById('darkModeToggle');
+        const knob = document.getElementById('darkModeKnob');
+        if (toggle) toggle.style.background = isDark ? '#e8c14f' : '#4b5563';
+        if (knob) knob.style.transform = isDark ? 'translateX(20px)' : 'translateX(0)';
+    }
+    function toggleDarkMode() {
+        document.documentElement.classList.toggle('dark');
+        const isDark = document.documentElement.classList.contains('dark');
+        localStorage.setItem('darkMode', isDark ? 'on' : 'off');
+        applyDarkModeUI(isDark);
+    }
+    applyDarkModeUI(document.documentElement.classList.contains('dark'));
+</script>
+</body>
+</html>

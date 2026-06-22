@@ -1,0 +1,63 @@
+struktur website
+├── 📁 models/
+│   ├── 🐍 base_model.py
+│   ├── 🐍 database.py
+│   ├── 🐍 kategori.py
+│   ├── 🐍 menu.py
+│   ├── 🐍 pesanan.py
+│   └── 🐍 user.py
+├── 📁 routes/
+│   ├── 🐍 admin.py
+│   └── 🐍 auth.py
+├── 📁 sql/
+│   └── 📄 kopi_db.sql
+├── 📁 static/
+│   ├── 📁 CSS/
+│   │   ├── 🎨 style.css
+│   │   └── 🎨 style_main.css
+│   ├── 📁 images/
+│   │   ├── 📁 coffee/
+│   │   │   ├── 🖼️ Hazelnut_Latte.webp
+│   │   │   ├── 🖼️ affogato.webp
+│   │   │   ├── 🖼️ americano.webp
+│   │   │   ├── 🖼️ cafe_latte.webp
+│   │   │   └── 🖼️ mochaccino.webp
+│   │   ├── 📁 food/
+│   │   │   ├── 🖼️ beef_burger.webp
+│   │   │   ├── 🖼️ mie_ayam.webp
+│   │   │   ├── 🖼️ nasi_goreng.webp
+│   │   │   └── 🖼️ pasta_carbonara.webp
+│   │   ├── 📁 menu/
+│   │   │   ├── 🖼️ Caramel_Latte_RMBG.webp
+│   │   │   ├── 🖼️ Dalgona_Coffee_RMBG.webp
+│   │   │   ├── 🖼️ Vanilla_Latte_RMBG.webp
+│   │   │   ├── 🖼️ bg.webp
+│   │   │   └── 🖼️ logo.webp
+│   │   ├── 📁 non-coffee/
+│   │   │   ├── 🖼️ chocolate.webp
+│   │   │   ├── 🖼️ cookies_cream.webp
+│   │   │   ├── 🖼️ matcha_latte.webp
+│   │   │   ├── 🖼️ red_velvet.webp
+│   │   │   └── 🖼️ taro_latte.webp
+│   │   └── 📁 snack/
+│   │       ├── 🖼️ butter_croissant.webp
+│   │       ├── 🖼️ cireng_glazed.webp
+│   │       ├── 🖼️ donut_glazed.webp
+│   │       └── 🖼️ french_fries.webp
+│   └── 📁 js/
+│       └── 📄 script.js
+├── 📁 templates/
+│   ├── 📁 admin/
+│   │   ├── 🌐 base.html
+│   │   ├── 🌐 dashboard.html
+│   │   ├── 🌐 kategori.html
+│   │   ├── 🌐 laporan.html
+│   │   ├── 🌐 menu.html
+│   │   └── 🌐 users.html
+│   ├── 📁 auth/
+│   │   ├── 🌐 login.html
+│   │   └── 🌐 register.html
+│   ├── 🌐 home.html
+│   └── 🌐 menu.html
+└── 🐍 main.py
+

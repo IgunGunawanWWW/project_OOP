@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Daftar - Fabulous Coffee</title>
+        <link
+            rel="icon"
+            href="{{ url_for('static', filename='images/menu/logo.webp') }}"
+            type="image/webp"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='CSS/style.css') }}"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Montserrat:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <img
+            class="background-image"
+            src="{{ url_for('static', filename='images/menu/bg.webp') }}"
+            alt="background"
+        />
+        <div class="bg-overlay"></div>
+
+        <div class="auth-wrapper">
+            <div class="auth-box">
+                <p class="brand-label">FABULOUS COFFEE</p>
+                <h1 class="brand-title">Buat Akun</h1>
+                <p class="brand-sub">Bergabung bersama kami</p>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %} {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %} {% endif %} {% endwith %}
+
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <input
+                        type="text"
+                        name="nama"
+                        placeholder="Nama Lengkap"
+                        required
+                    />
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        required
+                    />
+                    <button type="submit" class="auth-btn">Daftar</button>
+                </form>
+
+                <p class="auth-link">
+                    Sudah punya akun? <a href="/login">Login</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="auth-footer">
+            © 2026 Fabulous Coffee. All Rights Reserved.
+        </div>
+    </body>
+</html>

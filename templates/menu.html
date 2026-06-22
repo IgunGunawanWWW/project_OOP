@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Menu - Fabulous Coffee</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@300;400;800&family=Montserrat:wght@500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='CSS/style_main.css') }}"
+        />
+        <link
+            rel="icon"
+            href="{{ url_for('static', filename='images/menu/logo.webp') }}"
+            type="image/webp"
+        />
+    </head>
+    <body class="main-body">
+        {# Kartu menu dinamis: dipakai di tiap section kategori #}
+        {% macro coffee_card(item) %}
+        {% set img = url_for('static', filename=item.gambar) if item.gambar else '' %}
+        {% set harga = '{:,.0f}'.format(item.harga)|replace(',', '.') %}
+        <div class="coffee-card" onclick="openCardDetail('{{ item.nama_kopi|replace("'", "\\'") }}', {{ item.harga|int }}, '{{ img }}')">
+            <div class="card-image">
+                {% if item.gambar %}
+                <img src="{{ img }}" alt="{{ item.nama_kopi }}" loading="lazy" />
+                {% else %}
+                <span class="card-image-empty"><i class="fas fa-mug-hot"></i></span>
+                {% endif %}
+            </div>
+            <div class="card-info">
+                <h3>{{ item.nama_kopi }}</h3>
+                <p class="card-desc">{{ item.deskripsi or 'Menu pilihan Fabulous Coffee.' }}</p>
+                <div class="card-footer">
+                    <span class="price">Rp{{ harga }}</span>
+                    <button class="add-btn" onclick="event.stopPropagation(); addToCart(this, '{{ item.nama_kopi|replace("'", "\\'") }}', {{ item.harga|int }})">+</button>
+                </div>
+            </div>
+        </div>
+        {% endmacro %}
+
+        <!-- Navbar -->
+        <nav>
+            <h1><a href="#top">Fabulous Coffee</a></h1>
+            <ul>
+                <li><a href="#coffee">Coffee</a></li>
+                <li><a href="#non-coffee">Non Coffee</a></li>
+                <li><a href="#snack">Snack</a></li>
+                <li><a href="#food">Food</a></li>
+            </ul>
+            <div class="nav-user">
+                <span class="nav-greeting">Hello, <span>{{ session.user_name }}</span></span>
+                {% if session.role == 'admin' %}
+                <a href="{{ url_for('admin.dashboard') }}" class="nav-btn dashboard">
+                    <i class="fas fa-gauge-high"></i> Dashboard
+                </a>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}" class="nav-btn logout">
+                    <i class="fas fa-right-from-bracket"></i> Logout
+                </a>
+            </div>
+        </nav>
+
+        <!-- Hero -->
+        <header class="hero" id="top">
+            <div class="hero-content">
+                <p>Premium Coffee Experience</p>
+                <h2>Fabulous Coffee</h2>
+                <p style="letter-spacing: 2px; font-size: 12px; opacity: 0.8">
+                    BEYOND THE ORDINARY CUP
+                </p>
+            </div>
+            <a href="#bestseller" class="btn">EXPLORE MENU</a>
+        </header>
+
+        <!-- BEST SELLER -->
+        <section id="bestseller">
+            <div class="section-header">
+                <span>ESTABLISHED 2026</span>
+                <h2>Must Try Favorites</h2>
+            </div>
+            <div class="slider-container">
+                <button class="arrow left" onclick="prevSlide()">❮</button>
+                <div class="slider">
+                    {% for item in menu if item.nama_kategori == 'Best-Seller' %}
+                    {% set img = url_for('static', filename=item.gambar) if item.gambar else '' %}
+                    <div
+                        class="slide"
+                        data-id="{{ item.id }}"
+                        data-title="{{ item.nama_kopi }}"
+                        data-price="Rp {{ '{:,.0f}'.format(item.harga)|replace(',', '.') }}"
+                        data-desc="{{ item.deskripsi or '' }}"
+                        data-img="{{ img }}"
+                        onclick="openDetailFromEl(this)"
+                    >
+                        {% if item.gambar %}
+                        <img src="{{ img }}" loading="lazy" />
+                        {% else %}
+                        <div class="slide-img-empty"><i class="fas fa-mug-hot"></i></div>
+                        {% endif %}
+                        <div class="slide-content">
+                            <h3>{{ item.nama_kopi }}</h3>
+                            <p>{{ item.deskripsi or '' }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="arrow right" onclick="nextSlide()">❯</button>
+            </div>
+        </section>
+
+        <!-- PRODUCT DETAIL -->
+        <section id="product-detail" class="product-detail">
+            <div class="detail-container">
+                <div class="detail-text">
+                    <p class="back-btn" onclick="closeDetail()">← GO BACK</p>
+                    <h1 id="detail-title">Caramel Latte</h1>
+                    <h2 id="detail-price">Rp 35.000</h2>
+                    <p id="detail-desc">
+                        Espresso creamy dengan caramel premium.
+                    </p>
+                    <div class="qty-selector detail-qty-selector">
+                        <button onclick="changeDetailQty(-1)">−</button>
+                        <span id="detail-qty">1</span>
+                        <button onclick="changeDetailQty(1)">+</button>
+                    </div>
+                    <button class="buy-btn" onclick="addFromSlider()">ADD TO CART</button>
+                    <div class="detail-tags">
+                        <span>☕ Best Seller</span>
+                        <span>🔥 Popular</span>
+                        <span>⭐ Staff Pick</span>
+                    </div>
+                    <p class="detail-note">
+                        Dipesan segar setiap hari. Bahan pilihan dari petani lokal terbaik.
+                    </p>
+                </div>
+                <div class="detail-image">
+                    <img id="detail-img" src="" />
+                    <p class="detail-brand-text">FABULOUS COFFEE</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Coffee -->
+        <section class="menu-section" id="coffee">
+            <div class="section-header">
+                <span>Signature Brews</span>
+                <h2>Special Coffee</h2>
+            </div>
+            <div class="scroll-container">
+                {% for item in menu if item.nama_kategori == 'Coffee' %}
+                {{ coffee_card(item) }}
+                {% else %}
+                <p class="empty-cat">Belum ada menu di kategori ini.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Non Coffee -->
+        <section class="menu-section" id="non-coffee">
+            <div class="section-header">
+                <span>Fresh &amp; Sweet</span>
+                <h2>Non Coffee</h2>
+            </div>
+            <div class="scroll-container">
+                {% for item in menu if item.nama_kategori == 'Non-Coffee' %}
+                {{ coffee_card(item) }}
+                {% else %}
+                <p class="empty-cat">Belum ada menu di kategori ini.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Snack -->
+        <section class="menu-section" id="snack">
+            <div class="section-header">
+                <span>Light Bites</span>
+                <h2>Tasty Snacks</h2>
+            </div>
+            <div class="scroll-container">
+                {% for item in menu if item.nama_kategori == 'Snack' %}
+                {{ coffee_card(item) }}
+                {% else %}
+                <p class="empty-cat">Belum ada menu di kategori ini.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Food -->
+        <section class="menu-section" id="food">
+            <div class="section-header">
+                <span>Hearty Plates</span>
+                <h2>Heavy Meals</h2>
+            </div>
+            <div class="scroll-container">
+                {% for item in menu if item.nama_kategori == 'Food' %}
+                {{ coffee_card(item) }}
+                {% else %}
+                <p class="empty-cat">Belum ada menu di kategori ini.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Cart -->
+        <div class="floating-cart" onclick="toggleCart()">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cart-count">0</span>
+        </div>
+
+        <div id="cart-page" class="cart-modal">
+            <div class="cart-content">
+                <span class="close-cart" onclick="toggleCart()">&times;</span>
+
+                <div id="empty-cart" class="cart-status">
+                    <i class="fas fa-shopping-basket" style="font-size: 80px; color: #ddd; margin-bottom: 20px;"></i>
+                    <h2>Anda belum memesan.</h2>
+                    <button class="btn" onclick="toggleCart()">Go Shopping</button>
+                </div>
+
+                <div id="filled-cart" class="cart-status" style="display: none">
+                    <div class="cart-grid">
+                        <div class="cart-main">
+                            <div class="cart-header">
+                                <h2>Keranjang</h2>
+                                <span class="cart-count-label" id="cart-items-count">0 item</span>
+                            </div>
+                            <div class="cart-item-list"></div>
+                        </div>
+
+                        <aside class="cart-summary">
+                            <h3 class="summary-title">Summary</h3>
+                            <div class="summary-rows">
+                                <p>Total item <span id="total-items">0</span></p>
+                                <p>Sub total <span id="sub-total">Rp 0</span></p>
+                            </div>
+                            <hr />
+                            <div class="summary-final">
+                                <span>Final payment</span>
+                                <span id="final-payment">Rp 0</span>
+                            </div>
+                            <button class="buy-btn" onclick="checkout()">
+                                Checkout
+                            </button>
+                        </aside>
+                    </div>
+                </div>
+
+                <!-- Pesanan sedang diproses -->
+                <div id="order-status" class="cart-status" style="display: none">
+                    <span class="order-badge">
+                        <i class="fas fa-circle-notch"></i> Sedang Diproses
+                    </span>
+                    <h2>Pesanan Kamu</h2>
+                    <div id="order-item-list" class="cart-item-list"></div>
+                    <div class="cart-summary">
+                        <h3>Total: <span id="order-total">RP 0</span></h3>
+                    </div>
+                    <button class="cancel-order-btn" onclick="cancelOrder()">
+                        Batalkan Pesanan
+                    </button>
+                </div>
+
+                <!-- Pesanan selesai / dibatalkan -->
+                <div id="order-done" class="cart-status" style="display: none">
+                    <div id="order-done-icon" class="order-done-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h2 id="order-done-title">Pesanan Sudah Diterima</h2>
+                    <p id="order-done-text">
+                        Terima kasih! Pesananmu sudah selesai. Yuk pesan menu
+                        selanjutnya.
+                    </p>
+                    <button class="btn" onclick="orderAgain()">Pesan Lagi</button>
+                </div>
+            </div>
+        </div>
+        <!-- End Cart -->
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-container">
+                <div class="footer-box footer-brand">
+                    <h2 class="footer-logo">Fabulous<span> Coffee</span></h2>
+                    <p class="footer-tagline">Beyond The Ordinary Cup</p>
+                    <p>
+                        Menyajikan pengalaman kopi terbaik dengan biji pilihan
+                        dari petani lokal. Setiap cangkir adalah cerita tentang
+                        kualitas dan dedikasi.
+                    </p>
+                </div>
+
+                <div class="footer-box">
+                    <h3>Follow Our Journey</h3>
+                    <ul class="social-links">
+                        <li>
+                            <a href="#">
+                                <span class="social-ic"><i class="fab fa-instagram"></i></span>
+                                @FabulousCoffee
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="social-ic"><i class="fab fa-tiktok"></i></span>
+                                @FabulousCoffee
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://wa.me/628123456789" target="_blank">
+                                <span class="social-ic"><i class="fab fa-whatsapp"></i></span>
+                                +62 812-3456-789
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="footer-box">
+                    <h3>Visit Us</h3>
+                    <ul class="contact-list">
+                        <li>
+                            <i class="fas fa-location-dot"></i>
+                            <span>Jl. Kopi Senja No. 123, Jakarta</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Senin &ndash; Minggu: 08.00 &ndash; 22.00</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:hello@fabulouscoffee.com">hello@fabulouscoffee.com</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-creators">
+                <p>Created by</p>
+                <div class="creator-list">
+                    <span><strong>VIO LEFRANS</strong> (32250095)</span>
+                    <span><strong>IGUN GUNAWAN</strong> (32250094)</span>
+                    <span><strong>KELVIN FILEMON</strong> (32250077)</span>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                &copy; 2026 Fabulous Coffee. All Rights Reserved.
+            </div>
+        </footer>
+        <!-- End Footer -->
+
+        <!-- Card Detail Modal -->
+        <div id="card-detail-modal" class="card-detail-overlay">
+            <div class="card-detail-box">
+                <p class="back-btn" onclick="closeCardDetail()">← GO BACK</p>
+                <img id="card-detail-img" src="" />
+                <h2 id="card-detail-name"></h2>
+                <h3 id="card-detail-price-display"></h3>
+
+                <div class="qty-selector">
+                    <button onclick="changeQty(-1)">−</button>
+                    <span id="card-detail-qty">1</span>
+                    <button onclick="changeQty(1)">+</button>
+                </div>
+
+                <button class="buy-btn" onclick="addFromCardDetail()">
+                    ADD TO CART
+                </button>
+            </div>
+        </div>
+
+        <div id="checkout-success" class="success-overlay">
+            <div class="success-box">
+                <div class="success-icon"><i class="fas fa-check"></i></div>
+                <h2>Pesanan Berhasil!</h2>
+                <p>Pesanan kamu sedang kami proses dan akan segera diantar.</p>
+                <button class="success-btn" onclick="closeCheckout()">OK</button>
+            </div>
+        </div>
+
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    </body>
+</html>

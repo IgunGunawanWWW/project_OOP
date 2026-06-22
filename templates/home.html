@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Fabulous Coffee</title>
+        <link
+            rel="icon"
+            href="{{ url_for('static', filename='images/menu/logo.webp') }}"
+            type="image/webp"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='CSS/style.css') }}"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Montserrat:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <img
+            class="background-image"
+            src="{{ url_for('static', filename='images/menu/bg.webp') }}"
+            alt="background"
+        />
+        <div class="bg-overlay"></div>
+
+        <div class="auth-wrapper">
+            <div class="auth-box">
+                <p class="brand-label">EST. 2026</p>
+                <h1 class="brand-title">Fabulous Coffee</h1>
+                <p class="brand-sub">Beyond The Ordinary Cup</p>
+
+                {% if session.user_name %}
+                <p class="auth-desc">
+                    Halo, <strong>{{ session.user_name }}</strong>
+                </p>
+                <a href="/logout"><button class="auth-btn">Logout</button></a>
+                {% else %}
+                <p class="auth-desc">
+                    Masuk atau buat akun untuk mulai memesan
+                </p>
+                <div class="btn-group">
+                    <a href="/login"><button class="auth-btn">Login</button></a>
+                    <a href="/register"
+                        ><button class="auth-btn outline">Daftar</button></a
+                    >
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="auth-footer">
+            © 2026 Fabulous Coffee. All Rights Reserved.
+        </div>
+    </body>
+</html>
