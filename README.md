@@ -1,7 +1,8 @@
 # ☕ Fabulous Coffee
 
-> **Beyond The Ordinary Cup** — Aplikasi pemesanan kopi & makanan berbasis web.
-
+## Dokumentasi
+[Google Drive](https://drive.google.com/drive/folders/1SsQkaXwFn7ZLpW0MVeBgmV8F1xaYMpFY)
+Gunakan akun ubm untuk mengakses
 Dibangun dengan **Flask** + **MySQL/MariaDB** sebagai project akhir mata kuliah
 **Pemrograman Berorientasi Objek (OOP)**. Struktur kodenya menekankan penerapan
 konsep OOP (inheritance, encapsulation, polymorphism) pada layer model/database.
