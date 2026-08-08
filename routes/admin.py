@@ -58,27 +58,13 @@ def dashboard():
 @admin_bp.route('/admin/pesanan/<int:id>/status', methods=['POST'])
 @admin_required
 def pesanan_status(id):
-    status = request.get_json().get('status')
+    data = request.get_json(silent=True) or {}
+    status = data.get('status')
     if status not in ('pending', 'diproses', 'selesai', 'dibatalkan'):
         return jsonify({'status': 'error', 'message': 'Status tidak valid'})
-    with Pesanan() as model, Menu() as menu_model:
-        order = model.find(id)
-        if not order:
-            return jsonify({'status': 'error', 'message': 'Pesanan tidak ditemukan'})
-
-        lama = order['status']
-        if lama != status:
-            # stok dipotong saat 'diproses'/'selesai', dikembalikan saat batal/pending
-            dulu_terpotong = lama in ('diproses', 'selesai')
-            kini_terpotong = status in ('diproses', 'selesai')
-            if dulu_terpotong and not kini_terpotong:
-                for d in model.detail_untuk_stok(id):
-                    menu_model.tambah_stok(d['id_menu'], d['jumlah'])
-            elif not dulu_terpotong and kini_terpotong:
-                for d in model.detail_untuk_stok(id):
-                    menu_model.kurangi_stok(d['id_menu'], d['jumlah'])
-
-        model.ubah_status(id, status)
+    with Pesanan() as model:
+        if not model.change_status_with_stock(id, status):
+            return jsonify({'status': 'error', 'message': 'Pesanan tidak ditemukan atau stok tidak mencukupi'}), 409
     return jsonify({'status': 'ok'})
 
 

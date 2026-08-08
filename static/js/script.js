@@ -9,6 +9,14 @@ const total = slides.length;
 let current = 0;
 let isAnimating = false;
 
+function csrfHeaders(json = false) {
+  const headers = {
+    "X-CSRFToken": document.querySelector('meta[name="csrf-token"]').content,
+  };
+  if (json) headers["Content-Type"] = "application/json";
+  return headers;
+}
+
 function mod(n, m) {
   return ((n % m) + m) % m;
 }
@@ -110,7 +118,7 @@ function addFromSlider() {
   const qty = parseInt(document.getElementById("detail-qty").innerText);
   fetch("/cart/add", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: csrfHeaders(true),
     body: JSON.stringify({ menu_id: menuId, jumlah: qty }),
   })
     .then((res) => res.json())
@@ -145,12 +153,14 @@ function renderCartItems(container, items, editable) {
   document.querySelector(container).innerHTML = items
     .map((item) => {
       const nama = escapeAttr(item.nama_kopi);
+      const namaHtml = escapeHtml(item.nama_kopi);
       const src = resolveImg(item.gambar);
+      const srcHtml = escapeHtml(src);
       const thumb = src
-        ? `<img src="${src}" alt="${item.nama_kopi}" loading="lazy" onerror="this.parentNode.innerHTML='&lt;i class=&quot;fas fa-mug-hot&quot;&gt;&lt;/i&gt;'" />`
+        ? `<img src="${srcHtml}" alt="${namaHtml}" loading="lazy" onerror="this.parentNode.innerHTML='&lt;i class=&quot;fas fa-mug-hot&quot;&gt;&lt;/i&gt;'" />`
         : `<i class="fas fa-mug-hot"></i>`;
       const kategori = item.kategori
-        ? `<span class="cart-item-tag">${item.kategori}</span>`
+        ? `<span class="cart-item-tag">${escapeHtml(item.kategori)}</span>`
         : "";
       const harga = `Rp ${Number(item.harga_satuan ?? item.subtotal).toLocaleString("id-ID")}`;
       const subtotal = `Rp ${Number(item.subtotal).toLocaleString("id-ID")}`;
@@ -171,7 +181,7 @@ function renderCartItems(container, items, editable) {
             <div class="cart-item-thumb">${thumb}</div>
             <div class="cart-item-info">
                 ${kategori}
-                <span class="cart-item-name">${item.nama_kopi}</span>
+                <span class="cart-item-name">${namaHtml}</span>
                 <span class="cart-item-unit">${harga}</span>
             </div>
             <div class="cart-item-right">
@@ -185,7 +195,21 @@ function renderCartItems(container, items, editable) {
 
 /* Escape tanda kutip supaya nama menu aman dipakai di atribut onclick */
 function escapeAttr(str) {
-  return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+  return String(str)
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/[\r\n]/g, " ")
+    .replace(/"/g, "&quot;");
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  })[char]);
 }
 
 /* Lengkapi path gambar: data lama disimpan tanpa prefix /static/ */
@@ -202,7 +226,7 @@ function updateCartQty(nama, jumlahBaru) {
   if (jumlahBaru < 1) return; // hapus item lewat tombol ✕, bukan tombol −
   fetch("/cart/update-qty", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: csrfHeaders(true),
     body: JSON.stringify({ nama: nama, jumlah: jumlahBaru }),
   })
     .then((res) => res.json())
@@ -298,17 +322,11 @@ function handleAddResult(data, qty) {
   }
 }
 
-function addToCart(btn, itemName, price) {
-  // Ambil gambar dari kartu menu supaya bisa ditampilkan & disimpan di keranjang
-  let gambar = "";
-  const card = btn && btn.closest ? btn.closest(".coffee-card") : null;
-  const img = card ? card.querySelector(".card-image img") : null;
-  if (img) gambar = img.getAttribute("src");
-
+function addToCart(btn, itemName) {
   fetch("/cart/add-by-name", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nama: itemName, harga: price, jumlah: 1, gambar }),
+    headers: csrfHeaders(true),
+    body: JSON.stringify({ nama: itemName, jumlah: 1 }),
   })
     .then((res) => res.json())
     .then((data) => handleAddResult(data, 1));
@@ -317,7 +335,7 @@ function addToCart(btn, itemName, price) {
 function removeFromCart(itemName) {
   fetch("/cart/remove", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: csrfHeaders(true),
     body: JSON.stringify({ nama: itemName }),
   })
     .then((res) => res.json())
@@ -327,7 +345,7 @@ function removeFromCart(itemName) {
 }
 
 function checkout() {
-  fetch("/cart/checkout", { method: "POST" })
+  fetch("/cart/checkout", { method: "POST", headers: csrfHeaders() })
     .then((res) => res.json())
     .then((data) => {
       if (data.status === "ok") {
@@ -345,7 +363,7 @@ function closeCheckout() {
 /* Batalkan pesanan yang sedang diproses */
 function cancelOrder() {
   if (!confirm("Yakin mau membatalkan pesanan ini?")) return;
-  fetch("/cart/cancel", { method: "POST" })
+  fetch("/cart/cancel", { method: "POST", headers: csrfHeaders() })
     .then((res) => res.json())
     .then((data) => {
       if (data.status === "ok") {
@@ -358,7 +376,7 @@ function cancelOrder() {
 
 /* "Pesan Lagi" — tutup notifikasi pesanan selesai, lalu tutup modal */
 function orderAgain() {
-  fetch("/cart/ack", { method: "POST" }).finally(() => toggleCart());
+  fetch("/cart/ack", { method: "POST", headers: csrfHeaders() }).finally(() => toggleCart());
 }
 
 /* Toast kecil untuk notifikasi singkat */
@@ -418,12 +436,10 @@ function addFromCardDetail() {
   const qty = parseInt(document.getElementById("card-detail-qty").innerText);
   fetch("/cart/add-by-name", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: csrfHeaders(true),
     body: JSON.stringify({
       nama: cardDetailItem.name,
-      harga: cardDetailItem.price,
       jumlah: qty,
-      gambar: cardDetailItem.img,
     }),
   })
     .then((res) => res.json())

@@ -9,19 +9,6 @@ from models.pesanan import Pesanan
 auth_bp = Blueprint('auth', __name__)
 
 
-def _normalize_gambar(gambar):
-    """Simpan path gambar relatif (tanpa prefix /static/) agar konsisten dengan
-    data lama di tabel menu (mis. 'images/menu/...')."""
-    if not gambar:
-        return None
-    g = str(gambar).strip()
-    for prefix in ('/static/', 'static/'):
-        if g.startswith(prefix):
-            g = g[len(prefix):]
-            break
-    return g or None
-
-
 def _pesan_stok_kurang(menu, jumlah):
     """Return pesan error jika stok menu tidak mencukupi, atau None jika cukup."""
     stok = menu.get('stok') or 0
@@ -30,6 +17,14 @@ def _pesan_stok_kurang(menu, jumlah):
     if jumlah > stok:
         return f"Stok {menu['nama_kopi']} tinggal {stok}."
     return None
+
+
+def _jumlah_valid(value):
+    try:
+        jumlah = int(value)
+    except (TypeError, ValueError):
+        return None
+    return jumlah if jumlah > 0 else None
 
 
 # HOME
@@ -104,9 +99,11 @@ def cart_add():
     if 'user_id' not in session:
         return jsonify({'status': 'error', 'message': 'Belum login'})
 
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     menu_id = data.get('menu_id')
-    jumlah = data.get('jumlah', 1)
+    jumlah = _jumlah_valid(data.get('jumlah', 1))
+    if not menu_id or jumlah is None:
+        return jsonify({'status': 'error', 'message': 'Data menu atau jumlah tidak valid'}), 400
 
     with Menu() as menu_model, Pesanan() as pesanan_model:
         if pesanan_model.ada_pesanan_diproses(session['user_id']):
@@ -186,19 +183,14 @@ def cart_cancel():
     if 'user_id' not in session:
         return jsonify({'status': 'error', 'message': 'Belum login'})
 
-    with Pesanan() as model, Menu() as menu_model:
-        order = model.order_terkini(session['user_id'])
-        berhasil = model.batalkan_diproses(session['user_id'])
-        if berhasil and order:
-            # kembalikan stok karena pesanan batal
-            for d in model.detail_untuk_stok(order['id']):
-                menu_model.tambah_stok(d['id_menu'], d['jumlah'])
+    with Pesanan() as model:
+        order_id = model.cancel_with_stock(session['user_id'])
 
-    if not berhasil:
+    if not order_id:
         return jsonify({'status': 'error', 'message': 'Tidak ada pesanan yang bisa dibatalkan'})
 
     # tampilkan konfirmasi "dibatalkan" sekali untuk pesanan ini
-    session['active_order'] = order['id']
+    session['active_order'] = order_id
     return jsonify({'status': 'ok'})
 
 
@@ -215,32 +207,26 @@ def cart_add_by_name():
     if 'user_id' not in session:
         return jsonify({'status': 'error', 'message': 'Belum login'})
 
-    data = request.get_json()
-    nama = data.get('nama')
-    harga = data.get('harga')
-    jumlah = data.get('jumlah', 1)
-    gambar = _normalize_gambar(data.get('gambar'))
+    data = request.get_json(silent=True) or {}
+    nama = str(data.get('nama', '')).strip()
+    jumlah = _jumlah_valid(data.get('jumlah', 1))
+    if not nama or jumlah is None:
+        return jsonify({'status': 'error', 'message': 'Nama menu atau jumlah tidak valid'}), 400
 
     with Menu() as menu_model, Pesanan() as pesanan_model:
         if pesanan_model.ada_pesanan_diproses(session['user_id']):
             return jsonify({'status': 'busy',
                             'message': 'Pesananmu sedang diproses. Tunggu sampai selesai untuk memesan lagi.'})
 
-        # Cari menu di database, kalau belum ada otomatis ditambahkan (beri stok awal)
         menu = menu_model.find_by_nama(nama)
         if not menu:
-            menu_id = menu_model.create(nama, harga, stok=50, gambar=gambar)
-            menu = menu_model.find(menu_id)
-        elif gambar and not menu.get('gambar'):
-            # Lengkapi gambar untuk menu lama yang belum punya, supaya muncul di cart
-            menu_model.set_gambar(menu['id'], gambar)
-            menu['gambar'] = gambar
+            return jsonify({'status': 'error', 'message': 'Menu tidak ditemukan'}), 404
 
         kurang = _pesan_stok_kurang(menu, jumlah)
         if kurang:
             return jsonify({'status': 'habis', 'message': kurang})
 
-        pesanan_model.tambah_item(session['user_id'], menu['id'], jumlah, harga)
+        pesanan_model.tambah_item(session['user_id'], menu['id'], jumlah, menu['harga'])
 
     return jsonify({'status': 'ok'})
 
@@ -273,11 +259,10 @@ def cart_update_qty():
     if 'user_id' not in session:
         return jsonify({'status': 'error', 'message': 'Belum login'})
 
-    data = request.get_json()
-    nama = data.get('nama')
-    jumlah = int(data.get('jumlah', 1))
-
-    if jumlah < 1:
+    data = request.get_json(silent=True) or {}
+    nama = str(data.get('nama', '')).strip()
+    jumlah = _jumlah_valid(data.get('jumlah', 1))
+    if not nama or jumlah is None:
         return jsonify({'status': 'error', 'message': 'Kuantitas minimal 1'})
 
     with Menu() as menu_model, Pesanan() as pesanan_model:
@@ -307,16 +292,13 @@ def cart_checkout():
     if 'user_id' not in session:
         return jsonify({'status': 'error'})
 
-    with Pesanan() as model, Menu() as menu_model:
-        keranjang = model.keranjang_aktif(session['user_id'])
-        if keranjang:
-            # potong stok tiap item yang dibeli
-            for d in model.detail_untuk_stok(keranjang['id']):
-                menu_model.kurangi_stok(d['id_menu'], d['jumlah'])
-        model.checkout(session['user_id'])
+    with Pesanan() as model:
+        order_id = model.checkout_with_stock(session['user_id'])
 
     # pantau pesanan ini supaya notifikasi selesai/dibatalkan muncul nanti
-    if keranjang:
-        session['active_order'] = keranjang['id']
+    if order_id:
+        session['active_order'] = order_id
 
+    if not order_id:
+        return jsonify({'status': 'error', 'message': 'Keranjang kosong atau stok tidak mencukupi'}), 409
     return jsonify({'status': 'ok'})

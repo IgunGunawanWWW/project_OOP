@@ -116,6 +116,57 @@ class Pesanan(BaseModel):
             (id_user,),
         )
 
+    def checkout_with_stock(self, id_user):
+        cursor = self.connection.cursor(dictionary=True)
+        try:
+            cursor.execute(
+                """
+                SELECT id FROM pesanan
+                WHERE id_user = %s AND status = 'pending'
+                ORDER BY id DESC LIMIT 1
+                FOR UPDATE
+                """,
+                (id_user,),
+            )
+            order = cursor.fetchone()
+            if not order:
+                self.connection.rollback()
+                return None
+
+            cursor.execute(
+                "SELECT id_menu, jumlah FROM detail_pesanan WHERE id_pesanan = %s",
+                (order["id"],),
+            )
+            details = cursor.fetchall()
+            if not details:
+                self.connection.rollback()
+                return None
+
+            for detail in details:
+                cursor.execute(
+                    """
+                    UPDATE menu
+                    SET stok = stok - %s
+                    WHERE id = %s AND stok >= %s
+                    """,
+                    (detail["jumlah"], detail["id_menu"], detail["jumlah"]),
+                )
+                if cursor.rowcount != 1:
+                    self.connection.rollback()
+                    return None
+
+            cursor.execute(
+                "UPDATE pesanan SET status = 'diproses' WHERE id = %s",
+                (order["id"],),
+            )
+            self.connection.commit()
+            return order["id"]
+        except Exception:
+            self.connection.rollback()
+            raise
+        finally:
+            cursor.close()
+
     # ---- pesanan milik user (untuk panel cart) ----
     def order_terkini(self, id_user):
         """Pesanan terakhir milik user (status apa pun), untuk panel cart."""
@@ -149,6 +200,93 @@ class Pesanan(BaseModel):
             (order["id"],),
         )
         return True
+
+    def cancel_with_stock(self, id_user):
+        cursor = self.connection.cursor(dictionary=True)
+        try:
+            cursor.execute(
+                """
+                SELECT id FROM pesanan
+                WHERE id_user = %s AND status = 'diproses'
+                ORDER BY id DESC LIMIT 1
+                FOR UPDATE
+                """,
+                (id_user,),
+            )
+            order = cursor.fetchone()
+            if not order:
+                self.connection.rollback()
+                return None
+
+            cursor.execute(
+                "SELECT id_menu, jumlah FROM detail_pesanan WHERE id_pesanan = %s",
+                (order["id"],),
+            )
+            for detail in cursor.fetchall():
+                cursor.execute(
+                    "UPDATE menu SET stok = stok + %s WHERE id = %s",
+                    (detail["jumlah"], detail["id_menu"]),
+                )
+            cursor.execute(
+                "UPDATE pesanan SET status = 'dibatalkan' WHERE id = %s",
+                (order["id"],),
+            )
+            self.connection.commit()
+            return order["id"]
+        except Exception:
+            self.connection.rollback()
+            raise
+        finally:
+            cursor.close()
+
+    def change_status_with_stock(self, order_id, status):
+        cursor = self.connection.cursor(dictionary=True)
+        try:
+            cursor.execute(
+                "SELECT status FROM pesanan WHERE id = %s FOR UPDATE",
+                (order_id,),
+            )
+            order = cursor.fetchone()
+            if not order:
+                self.connection.rollback()
+                return False
+
+            old_consumed = order["status"] in ("diproses", "selesai")
+            new_consumed = status in ("diproses", "selesai")
+            if old_consumed != new_consumed:
+                cursor.execute(
+                    "SELECT id_menu, jumlah FROM detail_pesanan WHERE id_pesanan = %s",
+                    (order_id,),
+                )
+                for detail in cursor.fetchall():
+                    if new_consumed:
+                        cursor.execute(
+                            """
+                            UPDATE menu SET stok = stok - %s
+                            WHERE id = %s AND stok >= %s
+                            """,
+                            (detail["jumlah"], detail["id_menu"], detail["jumlah"]),
+                        )
+                        if cursor.rowcount != 1:
+                            self.connection.rollback()
+                            return False
+                    else:
+                        cursor.execute(
+                            "UPDATE menu SET stok = stok + %s WHERE id = %s",
+                            (detail["jumlah"], detail["id_menu"]),
+                        )
+
+            cursor.execute(
+                "UPDATE pesanan SET status = %s WHERE id = %s",
+                (status, order_id),
+            )
+            self.connection.commit()
+            return True
+        except Exception:
+            self.connection.rollback()
+            raise
+        finally:
+            cursor.close()
 
     def ubah_status(self, id, status):
         self.execute("UPDATE pesanan SET status = %s WHERE id = %s", (status, id))
