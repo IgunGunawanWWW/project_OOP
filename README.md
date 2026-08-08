@@ -237,8 +237,10 @@ DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=
 DB_NAME=kopi_db
+FLASK_SECRET_KEY=ganti-dengan-nilai-random-yang-panjang
 ```
 > Sesuaikan `DB_PASSWORD` jika MySQL kamu menggunakan password.
+> Jangan commit `.env`; gunakan secret yang berbeda untuk setiap environment.
 
 ### 6. Jalankan aplikasi
 ```bash

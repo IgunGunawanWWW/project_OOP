@@ -22,6 +22,10 @@ class BaseModel:
     def _cursor(self):
         return self.__conn.cursor(dictionary=True)
 
+    @property
+    def connection(self):
+        return self.__conn
+
     def _commit(self):
         self.__conn.commit()
 

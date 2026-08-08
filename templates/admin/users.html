@@ -11,6 +11,7 @@
         <form method="post"
               action="{{ url_for('admin.users_edit', id=edit_user.id) if edit_user else url_for('admin.users_tambah') }}"
               class="space-y-3">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <div>
                 <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Nama</label>
                 <input type="text" name="nama" required value="{{ edit_user.nama if edit_user else '' }}"
@@ -66,6 +67,7 @@
                             <a href="{{ url_for('admin.users', edit=u.id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">Edit</a>
                             <form method="post" action="{{ url_for('admin.users_hapus', id=u.id) }}"
                                   onsubmit="return confirm('Hapus user {{ u.nama }}?')">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                 <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
                             </form>
                         </div>

@@ -11,6 +11,7 @@
         <form method="post"
               action="{{ url_for('admin.menu_edit', id=edit_menu.id) if edit_menu else url_for('admin.menu_tambah') }}"
               class="space-y-3">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <div>
                 <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Nama Menu</label>
                 <input type="text" name="nama_kopi" required value="{{ edit_menu.nama_kopi if edit_menu else '' }}"
@@ -94,6 +95,7 @@
                             <a href="{{ url_for('admin.menu', edit=m.id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">Edit</a>
                             <form method="post" action="{{ url_for('admin.menu_hapus', id=m.id) }}"
                                   onsubmit="return confirm('Hapus menu {{ m.nama_kopi }}?')">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                 <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
                             </form>
                         </div>

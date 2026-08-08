@@ -11,6 +11,7 @@
         <form method="post"
               action="{{ url_for('admin.kategori_edit', id=edit_kategori.id) if edit_kategori else url_for('admin.kategori_tambah') }}"
               class="space-y-3">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <div>
                 <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Nama Kategori</label>
                 <input type="text" name="nama_kategori" required
@@ -46,6 +47,7 @@
                             <a href="{{ url_for('admin.kategori', edit=k.id) }}" class="text-blue-600 dark:text-blue-400 hover:underline">Edit</a>
                             <form method="post" action="{{ url_for('admin.kategori_hapus', id=k.id) }}"
                                   onsubmit="return confirm('Hapus kategori {{ k.nama_kategori }}?')">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                 <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
                             </form>
                         </div>
